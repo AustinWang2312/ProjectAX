@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
 public class PlayerController : MonoBehaviour
 {
     public float speed = 2.5f;
@@ -13,11 +14,22 @@ public class PlayerController : MonoBehaviour
     private Vector3 cameraOffset;
     public float smoothSpeed = 0.125f;
 
+    public float maxHealth = 100;
+    public float currentHealth;
+    public PlayerHealthBar healthBar;
+
     private void Start()
     {
+        //Initialize Camera
         mainCameraTransform = Camera.main.transform;
         cameraOffset = mainCameraTransform.position - transform.position;
+
+        //Initialize Health
+        currentHealth = maxHealth;
+        healthBar.UpdateHealthBar();
     }
+
+    
 
     private void Update()
     {
@@ -27,6 +39,7 @@ public class PlayerController : MonoBehaviour
 
         // Calculate movement vector
         moveDirection = new Vector2(moveX, moveY).normalized;
+
     }
 
     private void FixedUpdate()
@@ -45,4 +58,24 @@ public class PlayerController : MonoBehaviour
         Vector3 smoothedCameraPosition = Vector3.Lerp(mainCameraTransform.position, desiredCameraPosition, smoothSpeed);
         mainCameraTransform.position = smoothedCameraPosition;
     }
+
+    // Function to handle damage taken by the player
+    public void TakeDamage(float damageAmount)
+    {
+        currentHealth -= damageAmount;
+        healthBar.UpdateHealthBar();
+
+        if (currentHealth <= 0)
+        {
+            Die();
+        }
+    }
+
+    // Function to handle player's death
+    private void Die()
+    {
+        // Perform actions when the player dies
+    }
+
+
 }
