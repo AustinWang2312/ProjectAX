@@ -20,8 +20,6 @@ public class OrbManager : MonoBehaviour
 
     private Dictionary<string, System.Action> combinationActions;
 
-
-
     public enum OrbType
     {
         Earth,
@@ -40,7 +38,7 @@ public class OrbManager : MonoBehaviour
             carriedOrbs[i] = OrbType.Empty;
         }
         carriedOrbs[0] = OrbType.Earth;
-        carriedOrbs[1] = OrbType.Water;
+        carriedOrbs[1] = OrbType.Earth;
         carriedOrbs[2] = OrbType.Fire;
         currentOrbs = 3;
 
@@ -110,7 +108,7 @@ public class OrbManager : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(CAST) || Input.GetMouseButtonDown(FORGE)) // Check for left mouse button click
         {
-            if (currentOrbs == 3)
+            if (currentOrbs == maxOrbs)
             {
                 int method = Input.GetMouseButtonDown(CAST) ? CAST : FORGE; // 0 for left click, 1 for right click
                 string key = $"{(int)carriedOrbs[0]}{(int)carriedOrbs[1]}{(int)carriedOrbs[2]}{method}";
@@ -119,7 +117,6 @@ public class OrbManager : MonoBehaviour
                 Debug.Log(combinationActions[key]);
                 action.Invoke();
 
-
                 // Deplete all orbs back to the empty orb
                 for (int i = 0; i < carriedOrbs.Length; i++)
                 {
@@ -127,66 +124,24 @@ public class OrbManager : MonoBehaviour
                 }
 
                 currentOrbs = 0;
-
                 UpdateOrbHUD();
             }
         }
         
     }
 
-    private void InvokeOrbs(int method)
-    {
-        // Perform the action based on the unique combination
-        if (carriedOrbs[0] == OrbType.Earth && carriedOrbs[1] == OrbType.Water && carriedOrbs[2] == OrbType.Fire)
-        {
-            // Action for Earth-Water-Fire combination
-            if (method == CAST)
-            {
-                Debug.Log("Performing action for Earth-Water-Fire combination on left click!");
-            }
-            else if (method == FORGE)
-            {
-                Debug.Log("Performing action for Earth-Water-Fire combination on right click!");
-            }
-        }
-        else if (carriedOrbs[0] == OrbType.Earth && carriedOrbs[1] == OrbType.Fire && carriedOrbs[2] == OrbType.Water)
-        {
-            // Action for Earth-Fire-Water combination
-            if (method == CAST)
-            {
-                Debug.Log("Performing action for Earth-Fire-Water combination on left click!");
-            }
-            else if (method == FORGE)
-            {
-                Debug.Log("Performing action for Earth-Fire-Water combination on right click!");
-            }
-        }
-        else if (carriedOrbs[0] == OrbType.Water && carriedOrbs[1] == OrbType.Earth && carriedOrbs[2] == OrbType.Fire)
-        {
-            // Action for Water-Earth-Fire combination
-            if (method == CAST)
-            {
-                Debug.Log("Performing action for Water-Earth-Fire combination on left click!");
-            }
-            else if (method == FORGE)
-            {
-                Debug.Log("Performing action for Water-Earth-Fire combination on right click!");
-            }
-        }
-        // Add more conditions for other permutations
 
-        // Deplete all orbs back to the empty orb
-        for (int i = 0; i < carriedOrbs.Length; i++)
-        {
-            carriedOrbs[i] = OrbType.Empty;
-        }
+// void SpawnZombie() 
+// { 
+//     GameObject ZombieClone = (GameObject)Instantiate(ZombiePrefab, RandomSpawnPoint(), Quaternion.identity);
+//     //Spawns a copy of ZombiePrefab at SpawnPoint
+//     ZombieClone.GetComponent<YourScript>().SetHealth(healthValue); 
 
-        currentOrbs = 0;
+//     public ZombieClass ZombiePrefab;
 
-        UpdateOrbHUD();
-    }
-
-
+//     ZombieClass zombieInstance = Instantiate(ZombiePrefab, RandomSpawnPoint(), Quaternion.identity) as ZombieClass;
+//     zombieInstance.SetHealth(healthValue);
+// }
     private void UpdateOrbHUD()
     {
         for (int i = 0; i < orbIcons.Length; i++)
@@ -327,8 +282,6 @@ public class OrbManager : MonoBehaviour
     {
         Debug.Log("Performing action for Right Click EarthWFireFire");
     }
-
-
 
     // 19 Cast Water Earth Fire
     private void CombinationAction_WaterEarthFire0()
