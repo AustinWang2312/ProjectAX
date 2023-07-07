@@ -142,6 +142,17 @@ public class OrbManager : MonoBehaviour
 //     ZombieClass zombieInstance = Instantiate(ZombiePrefab, RandomSpawnPoint(), Quaternion.identity) as ZombieClass;
 //     zombieInstance.SetHealth(healthValue);
 // }
+
+    public void AddOrb(OrbType type)
+    {
+        if (currentOrbs < carriedOrbs.Length) {
+            carriedOrbs[currentOrbs] = type;
+            currentOrbs += 1;
+            UpdateOrbHUD();
+        }
+
+    }
+
     private void UpdateOrbHUD()
     {
         for (int i = 0; i < orbIcons.Length; i++)
