@@ -7,9 +7,24 @@ using UnityEngine.UI;
 public class OrbManager : MonoBehaviour
 {
     public int maxOrbs = 3;
-    private int currentOrbs = 0;
-    private OrbType[] carriedOrbs;
+
+
+    //primary refers to first set of orbs
+    //secondary refers to second set of orbs
+    private OrbType[] primaryOrbs;
+    private OrbType[] secondaryOrbs;
+
+    //currentOrbs and backupOrbs are pointers to primary and secondary
+    //These indicate which set is currently in use and which set is
+    // the backup set.
+    private OrbType[] currentOrbs;
+    private OrbType[] backupOrbs;
+
+    
+    private bool usingsecondaryOrbs = false;
     public Image[] orbIcons;
+    public Image[] backupOrbIcons;
+
     public Sprite emptyOrb;
     public Sprite earthOrb;
     public Sprite waterOrb;
@@ -32,15 +47,29 @@ public class OrbManager : MonoBehaviour
     void Start()
     {
         //Initialize Orbs carried
-        carriedOrbs = new OrbType[maxOrbs];
-        for (int i = 0; i < carriedOrbs.Length; i++)
+        primaryOrbs = new OrbType[maxOrbs];
+        secondaryOrbs = new OrbType[maxOrbs];
+        
+        for (int i = 0; i < primaryOrbs.Length; i++)
         {
-            carriedOrbs[i] = OrbType.Empty;
+            primaryOrbs[i] = OrbType.Empty;
         }
-        carriedOrbs[0] = OrbType.Earth;
-        carriedOrbs[1] = OrbType.Earth;
-        carriedOrbs[2] = OrbType.Earth;
-        currentOrbs = 3;
+        primaryOrbs[0] = OrbType.Earth;
+        primaryOrbs[1] = OrbType.Earth;
+        primaryOrbs[2] = OrbType.Earth;
+
+        for (int i = 0; i < secondaryOrbs.Length; i++)
+        {
+            secondaryOrbs[i] = OrbType.Empty;
+        }
+        secondaryOrbs[0] = OrbType.Water;
+        secondaryOrbs[1] = OrbType.Water;
+        secondaryOrbs[2] = OrbType.Water;
+        
+        
+        currentOrbs = primaryOrbs;
+        backupOrbs = secondaryOrbs;
+
 
 
         //Initialize Combination hash map
@@ -65,6 +94,21 @@ public class OrbManager : MonoBehaviour
 
         UpdateOrbHUD();
         
+    }
+
+    public int getNumOrbs()
+    {
+        int count = 0;
+        for (int i = 0; i < currentOrbs.Length; i++)
+        {
+            if (currentOrbs[i] == OrbType.Empty) {
+                break;
+            }
+            count ++;
+        }
+
+        return count;
+
     }
 
 
@@ -108,25 +152,39 @@ public class OrbManager : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(CAST) || Input.GetMouseButtonDown(FORGE)) // Check for left mouse button click
         {
-            if (currentOrbs == maxOrbs)
+            if (getNumOrbs() == maxOrbs)
             {
                 int method = Input.GetMouseButtonDown(CAST) ? CAST : FORGE; // 0 for left click, 1 for right click
-                string key = $"{(int)carriedOrbs[0]}{(int)carriedOrbs[1]}{(int)carriedOrbs[2]}{method}";
+                string key = $"{(int)currentOrbs[0]}{(int)currentOrbs[1]}{(int)currentOrbs[2]}{method}";
                 Debug.Log(key);
                 System.Action action = combinationActions[key];
                 Debug.Log(combinationActions[key]);
                 action.Invoke();
 
                 // Deplete all orbs back to the empty orb
-                for (int i = 0; i < carriedOrbs.Length; i++)
+                for (int i = 0; i < currentOrbs.Length; i++)
                 {
-                    carriedOrbs[i] = OrbType.Empty;
+                    currentOrbs[i] = OrbType.Empty;
                 }
 
-                currentOrbs = 0;
                 UpdateOrbHUD();
             }
         }
+
+        if (Input.GetKeyDown(KeyCode.LeftShift) || Input.GetKeyDown(KeyCode.RightShift))
+        {
+            // Switch between currentOrbs and secondaryOrbs
+            usingsecondaryOrbs = !usingsecondaryOrbs;
+
+            // Update currentOrbs based on the active set
+            currentOrbs = usingsecondaryOrbs ? secondaryOrbs : primaryOrbs;
+            backupOrbs = !usingsecondaryOrbs ? secondaryOrbs : primaryOrbs;
+
+            // Update the orb HUD
+            UpdateOrbHUD();
+        }
+
+
         
     }
 
@@ -135,9 +193,9 @@ public class OrbManager : MonoBehaviour
 
     public bool AddOrb(OrbType type)
     {
-        if (currentOrbs < carriedOrbs.Length) {
-            carriedOrbs[currentOrbs] = type;
-            currentOrbs += 1;
+        int numOrbs = getNumOrbs();
+        if (numOrbs < currentOrbs.Length) {
+            currentOrbs[numOrbs] = type;
             UpdateOrbHUD();
             return true;
         }
@@ -152,7 +210,7 @@ public class OrbManager : MonoBehaviour
     {
         for (int i = 0; i < orbIcons.Length; i++)
         {
-            switch (carriedOrbs[i])
+            switch (currentOrbs[i])
             {
                 case OrbType.Empty:
                     orbIcons[i].sprite = emptyOrb;
@@ -169,6 +227,30 @@ public class OrbManager : MonoBehaviour
                     break;
             }
         }
+
+        for (int i = 0; i < backupOrbIcons.Length; i++)
+        {
+            switch (backupOrbs[i])
+            {
+                case OrbType.Empty:
+                    backupOrbIcons[i].sprite = emptyOrb;
+                    break;
+
+                case OrbType.Earth:
+                    backupOrbIcons[i].sprite = earthOrb;
+                    break;
+                case OrbType.Water:
+                    backupOrbIcons[i].sprite = waterOrb;
+                    break;
+                case OrbType.Fire:
+                    backupOrbIcons[i].sprite = fireOrb;
+                    break;
+            }
+        }
+
+
+
+
     }
 
 
@@ -234,27 +316,16 @@ public class OrbManager : MonoBehaviour
     // 10 Forge Earth Earth Earth
     private void CombinationAction_EarthEarthEarth1()
     {
-
+        //Animation and sound effect
         Debug.Log("Performing action for Right Click EarthEarthEarth");
+
         GameObject pylon = (GameObject)Instantiate(Resources.Load<GameObject>("Pylon"), transform.position, Quaternion.identity);
-        Debug.Log("pylon object");
-        Debug.Log(pylon);
         GameObject player = this.gameObject;
         pylon.GetComponent<Pylon>().SetPlayerObject(player);
         pylon.GetComponent<Pylon>().SetOrbType(OrbType.Earth, earthOrb, emptyOrb);
     }
 
-    // void SpawnZombie() 
-    // { 
-    //     GameObject ZombieClone = (GameObject)Instantiate(ZombiePrefab, RandomSpawnPoint(), Quaternion.identity);
-    //     //Spawns a copy of ZombiePrefab at SpawnPoint
-    //     ZombieClone.GetComponent<YourScript>().SetHealth(healthValue); 
 
-    //     public ZombieClass ZombiePrefab;
-
-    //     ZombieClass zombieInstance = Instantiate(ZombiePrefab, RandomSpawnPoint(), Quaternion.identity) as ZombieClass;
-    //     zombieInstance.SetHealth(healthValue);
-    // }
 
     // 11 Cast Earth Fire Earth
     private void CombinationAction_EarthFireEarth0()
