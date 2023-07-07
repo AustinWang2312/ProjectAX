@@ -6,11 +6,10 @@ public class Pylon : MonoBehaviour
 {
 
     public Renderer rend;
-    private OrbManager.OrbType elementalType = OrbManager.OrbType.Earth;
+    public OrbManager.OrbType elementalType;
     public bool isHovering = false;
     [SerializeField] GameObject player;
     OrbManager orbManager;
-    public Sprite orbType;
     public float energyGenerationInterval = 15f;
     private float nextEnergyGenerationTime;
     public bool hasOrb = false;
@@ -21,12 +20,20 @@ public class Pylon : MonoBehaviour
     public void SetPlayerObject(GameObject p)
     {
         player = p;
+        orbManager = player.GetComponent<OrbManager>();
+    }
+
+    public void SetOrbType(OrbManager.OrbType type, Sprite onSprite, Sprite offSprite)
+    {
+        elementalType = type;
+        orbOnSprite = onSprite;
+        orbOffSprite = offSprite;
     }
 
     void Start()
     {
         rend = GetComponent<Renderer>();
-        orbManager = player.GetComponent<OrbManager>();
+        
 
         nextEnergyGenerationTime = Time.time + energyGenerationInterval;
 
@@ -52,10 +59,13 @@ public class Pylon : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Space) && isHovering && hasOrb)
         {
-            orbManager.AddOrb(elementalType);
-            nextEnergyGenerationTime = Time.time + energyGenerationInterval;
-            hasOrb = false;
-            UpdatePylonSprite();
+            if (orbManager.AddOrb(elementalType))
+            {
+                nextEnergyGenerationTime = Time.time + energyGenerationInterval;
+                hasOrb = false;
+                UpdatePylonSprite();
+            }
+            
         }
 
         if (Time.time >= nextEnergyGenerationTime)

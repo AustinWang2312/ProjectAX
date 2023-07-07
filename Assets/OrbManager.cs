@@ -39,7 +39,7 @@ public class OrbManager : MonoBehaviour
         }
         carriedOrbs[0] = OrbType.Earth;
         carriedOrbs[1] = OrbType.Earth;
-        carriedOrbs[2] = OrbType.Fire;
+        carriedOrbs[2] = OrbType.Earth;
         currentOrbs = 3;
 
 
@@ -131,24 +131,19 @@ public class OrbManager : MonoBehaviour
     }
 
 
-// void SpawnZombie() 
-// { 
-//     GameObject ZombieClone = (GameObject)Instantiate(ZombiePrefab, RandomSpawnPoint(), Quaternion.identity);
-//     //Spawns a copy of ZombiePrefab at SpawnPoint
-//     ZombieClone.GetComponent<YourScript>().SetHealth(healthValue); 
 
-//     public ZombieClass ZombiePrefab;
 
-//     ZombieClass zombieInstance = Instantiate(ZombiePrefab, RandomSpawnPoint(), Quaternion.identity) as ZombieClass;
-//     zombieInstance.SetHealth(healthValue);
-// }
-
-    public void AddOrb(OrbType type)
+    public bool AddOrb(OrbType type)
     {
         if (currentOrbs < carriedOrbs.Length) {
             carriedOrbs[currentOrbs] = type;
             currentOrbs += 1;
             UpdateOrbHUD();
+            return true;
+        }
+        else
+        {
+            return false;
         }
 
     }
@@ -239,20 +234,42 @@ public class OrbManager : MonoBehaviour
     // 10 Forge Earth Earth Earth
     private void CombinationAction_EarthEarthEarth1()
     {
+
         Debug.Log("Performing action for Right Click EarthEarthEarth");
+        GameObject pylon = (GameObject)Instantiate(Resources.Load<GameObject>("Pylon"), transform.position, Quaternion.identity);
+        Debug.Log("pylon object");
+        Debug.Log(pylon);
+        GameObject player = this.gameObject;
+        pylon.GetComponent<Pylon>().SetPlayerObject(player);
+        pylon.GetComponent<Pylon>().SetOrbType(OrbType.Earth, earthOrb, emptyOrb);
     }
+
+    // void SpawnZombie() 
+    // { 
+    //     GameObject ZombieClone = (GameObject)Instantiate(ZombiePrefab, RandomSpawnPoint(), Quaternion.identity);
+    //     //Spawns a copy of ZombiePrefab at SpawnPoint
+    //     ZombieClone.GetComponent<YourScript>().SetHealth(healthValue); 
+
+    //     public ZombieClass ZombiePrefab;
+
+    //     ZombieClass zombieInstance = Instantiate(ZombiePrefab, RandomSpawnPoint(), Quaternion.identity) as ZombieClass;
+    //     zombieInstance.SetHealth(healthValue);
+    // }
 
     // 11 Cast Earth Fire Earth
     private void CombinationAction_EarthFireEarth0()
     {
         // Action for left-click Orb1=0, Orb2=1, Orb3=2 combination
         Debug.Log("Performing action for Left Click EarthFireEarth");
+        
+
     }
 
     // 12 Forge Earth Fire Earth
     private void CombinationAction_EarthFireEarth1()
     {
         Debug.Log("Performing action for Right Click EarthFireEarth");
+        
     }
 
     // 13 Cast Earth Fire Earth
