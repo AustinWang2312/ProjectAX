@@ -23,7 +23,7 @@ public class FlatDamage : MonoBehaviour
         }
     }
 
-    // When an enemy enters a slow zone
+    // When an enemy enters a damage zone
     void OnTriggerEnter2D(Collider2D collision)
     {
         Debug.Log("flat damage zone entry");

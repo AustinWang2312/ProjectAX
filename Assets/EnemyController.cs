@@ -10,7 +10,8 @@ public class EnemyController : MonoBehaviour
     public Rigidbody2D rb;
     Vector2 moveDirection;
 
-    private bool isSlowed;
+    private bool isKnockedBack = false;
+
 
 
     // Start is called before the first frame update
@@ -18,7 +19,6 @@ public class EnemyController : MonoBehaviour
     {
         target = GameObject.FindGameObjectWithTag("Player").transform;
         currentSpeed = defaultSpeed;
-        isSlowed = false;
 
     }
 
@@ -32,19 +32,38 @@ public class EnemyController : MonoBehaviour
             rb.rotation = angle;
             moveDirection = direction;
 
-            //// Move towards the player
-            //transform.position = Vector2.MoveTowards(transform.position, target.position, speed * Time.deltaTime);
+            
         }
 
     }
 
     private void FixedUpdate()
     {
-        if (target)
+        if (target & !isKnockedBack)
         {
             rb.velocity = new Vector2(moveDirection.x, moveDirection.y) * currentSpeed;
         }
     }
+
+    public void ApplyKnockback(Vector2 circleCenter, float knockbackForce)
+    {
+        Vector2 knockbackDirection = (Vector2)transform.position - circleCenter;
+        rb.AddForce(knockbackDirection.normalized * knockbackForce, ForceMode2D.Impulse);
+
+        // Set the flag to true when knockback is applied
+        isKnockedBack = true;
+
+        // Reset the flag after some time (e.g., 0.5 seconds)
+        Invoke("ResetKnockback", 0.25f);
+    }
+
+    private void ResetKnockback()
+    {
+        // Reset the flag
+        isKnockedBack = false;
+    }
+
+
 
     //function to slow the enemy once per collision
     // reduces speed upon collision, returns speed after duration
@@ -65,10 +84,6 @@ public class EnemyController : MonoBehaviour
         currentSpeed /= slowAmount;
     }
 
-
-
-
-
     private IEnumerator SlowEffect(float slowAmount, float duration)
     {
         currentSpeed *= slowAmount;
@@ -78,53 +93,9 @@ public class EnemyController : MonoBehaviour
     }
 
 
-    private IEnumerator SlowZone(float slowAmount, float duration)
-    {
-        while (isSlowed)
-        {
-            currentSpeed *= slowAmount;
-            yield return new WaitForSeconds(duration);
-            currentSpeed = defaultSpeed;
-        }
-    }
+  
 
-    //// When collides with a slow effect object
-    //void OnCollisionEnter2D(Collision2D collision)
-    //{
-    //    Debug.Log("collided");
-    //    SlowEffect slowEffect = collision.gameObject.GetComponent<SlowEffect>();
-    //    if (slowEffect)
-    //    {
-    //        Debug.Log("collided slow");
-    //        SlowOnce(slowEffect.slowAmount, slowEffect.duration);
-    //    }
-    //}
-
-    //// When entering a slow zone
-    //void OnTriggerEnter2D(Collider2D collision)
-    //{
-    //    Debug.Log("collided");
-    //    SlowEffect slowEffect = collision.gameObject.GetComponent<SlowEffect>();
-
-    //    if (slowEffect)
-    //    {
-    //        Debug.Log("collided slow");
-    //        isSlowed = true;
-    //        SlowContinuous(slowEffect.slowAmount, slowEffect.duration);
-    //    }
-    //}
-
-    //// When leaving a slow zone
-    //void OnTriggerExit2D(Collider2D collision)
-    //{
-    //    Debug.Log("exited");
-    //    if (collision.gameObject.CompareTag("SlowEffect"))
-    //    {
-    //        Debug.Log("exited slow");
-    //        isSlowed = false;
-    //        currentSpeed = defaultSpeed;
-    //    }
-    //}
+ 
 
 
 }

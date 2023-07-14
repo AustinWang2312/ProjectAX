@@ -24,7 +24,6 @@ public class PlayerHealth : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        TakeFlatDamage(0.01f);
     }
 
     public float GetMaxHealth()

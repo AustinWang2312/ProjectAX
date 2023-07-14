@@ -43,8 +43,18 @@ public class PlayerController : MonoBehaviour
         // Calculate movement vector
         moveDirection = new Vector2(moveX, moveY).normalized;
 
+        // Apply movement
+        rb.MovePosition(rb.position + moveDirection * speed * Time.fixedDeltaTime);
 
-        
+        // Update camera position smoothly
+        Vector3 desiredCameraPosition = transform.position + cameraOffset;
+        Vector3 smoothedCameraPosition = Vector3.Lerp(mainCameraTransform.position, desiredCameraPosition, smoothSpeed);
+        mainCameraTransform.position = smoothedCameraPosition;
+
+
+
+
+
     }
 
     private void LateUpdate()
@@ -56,13 +66,9 @@ public class PlayerController : MonoBehaviour
         //rb.rotation = angle;
         transform.up = lookDirection;
 
-        // Apply movement
-        rb.MovePosition(rb.position + moveDirection * speed * Time.fixedDeltaTime);
 
-        // Update camera position smoothly
-        Vector3 desiredCameraPosition = transform.position + cameraOffset;
-        Vector3 smoothedCameraPosition = Vector3.Lerp(mainCameraTransform.position, desiredCameraPosition, smoothSpeed);
-        mainCameraTransform.position = smoothedCameraPosition;
+        
+
     }
 
     
