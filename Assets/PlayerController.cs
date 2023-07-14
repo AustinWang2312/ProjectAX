@@ -14,9 +14,7 @@ public class PlayerController : MonoBehaviour
     private Vector3 cameraOffset;
     public float smoothSpeed = 0.125f;
 
-    public float maxHealth = 100;
-    public float currentHealth;
-    public PlayerHealthBar healthBar;
+    
 
     private void Start()
     {
@@ -24,15 +22,20 @@ public class PlayerController : MonoBehaviour
         mainCameraTransform = Camera.main.transform;
         cameraOffset = mainCameraTransform.position - transform.position;
 
-        //Initialize Health
-        currentHealth = maxHealth;
-        healthBar.UpdateHealthBar();
+        
     }
 
     
 
     private void Update()
     {
+       
+
+    }
+
+    private void FixedUpdate()
+    {
+
         // Get input for movement
         float moveX = Input.GetAxisRaw("Horizontal");
         float moveY = Input.GetAxisRaw("Vertical");
@@ -40,19 +43,8 @@ public class PlayerController : MonoBehaviour
         // Calculate movement vector
         moveDirection = new Vector2(moveX, moveY).normalized;
 
-    }
 
-    private void FixedUpdate()
-    {
         
-
-        // Apply movement
-        rb.MovePosition(rb.position + moveDirection * speed * Time.fixedDeltaTime);
-
-        // Update camera position smoothly
-        Vector3 desiredCameraPosition = transform.position + cameraOffset;
-        Vector3 smoothedCameraPosition = Vector3.Lerp(mainCameraTransform.position, desiredCameraPosition, smoothSpeed);
-        mainCameraTransform.position = smoothedCameraPosition;
     }
 
     private void LateUpdate()
@@ -63,25 +55,17 @@ public class PlayerController : MonoBehaviour
         //float angle = Mathf.Atan2(lookDirection.y, lookDirection.x) * Mathf.Rad2Deg - 90f;
         //rb.rotation = angle;
         transform.up = lookDirection;
+
+        // Apply movement
+        rb.MovePosition(rb.position + moveDirection * speed * Time.fixedDeltaTime);
+
+        // Update camera position smoothly
+        Vector3 desiredCameraPosition = transform.position + cameraOffset;
+        Vector3 smoothedCameraPosition = Vector3.Lerp(mainCameraTransform.position, desiredCameraPosition, smoothSpeed);
+        mainCameraTransform.position = smoothedCameraPosition;
     }
 
-    // Function to handle damage taken by the player
-    public void TakeDamage(float damageAmount)
-    {
-        currentHealth -= damageAmount;
-        healthBar.UpdateHealthBar();
-
-        if (currentHealth <= 0)
-        {
-            Die();
-        }
-    }
-
-    // Function to handle player's death
-    private void Die()
-    {
-        // Perform actions when the player dies
-    }
+    
 
 
 }

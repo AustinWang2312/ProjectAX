@@ -35,6 +35,8 @@ public class OrbManager : MonoBehaviour
 
     public Transform firePoint;
 
+    public PlayerHealth playerHealth;
+
     private Dictionary<string, System.Action> combinationActions;
 
     public enum OrbType
@@ -255,11 +257,19 @@ public class OrbManager : MonoBehaviour
 
     }
 
+    private void CreatePylon(OrbType orbType, Sprite onSprite, Sprite offSprite)
+    {
+        GameObject pylon = (GameObject)Instantiate(Resources.Load<GameObject>("Pylon"), transform.position, Quaternion.identity);
+        GameObject player = this.gameObject;
+        pylon.GetComponent<Pylon>().SetPlayerObject(player);
+        pylon.GetComponent<Pylon>().SetOrbType(orbType, onSprite, offSprite);
+    }
+
 
     // 1 Cast Earth Water Fire
     private void CombinationAction_EarthWaterFire0()
     {
-        // Action for left-click Orb1=0, Orb2=1, Orb3=2 combination
+        
         Debug.Log("Performing action for Left Click EarthWaterFire");
     }
 
@@ -272,7 +282,7 @@ public class OrbManager : MonoBehaviour
     // 3 Cast Earth Fire Water
     private void CombinationAction_EarthFireWater0()
     {
-        // Action for left-click Orb1=0, Orb2=1, Orb3=2 combination
+        
         Debug.Log("Performing action for Left Click EarthFireWater");
     }
 
@@ -285,7 +295,7 @@ public class OrbManager : MonoBehaviour
     // 5 Cast Earth Earth Water
     private void CombinationAction_EarthEarthWater0()
     {
-        // Action for left-click Orb1=0, Orb2=1, Orb3=2 combination
+        
         Debug.Log("Performing action for Left Click EarthEarthWater");
     }
 
@@ -298,7 +308,7 @@ public class OrbManager : MonoBehaviour
     // 7 Cast Earth Earth Fire
     private void CombinationAction_EarthEarthFire0()
     {
-        // Action for left-click Orb1=0, Orb2=1, Orb3=2 combination
+        
         Debug.Log("Performing action for Left Click EarthEarthFire");
     }
 
@@ -311,8 +321,13 @@ public class OrbManager : MonoBehaviour
     // 9 Cast Earth Earth Earth
     private void CombinationAction_EarthEarthEarth0()
     {
-        // Action for left-click Orb1=0, Orb2=1, Orb3=2 combination
+        
         Debug.Log("Performing action for Left Click EarthEarthEarth");
+        float shield_base = 40;
+        //change with modifiers later
+        float final_shield = shield_base;
+        playerHealth.SetShield(final_shield);
+
     }
 
     // 10 Forge Earth Earth Earth
@@ -321,10 +336,7 @@ public class OrbManager : MonoBehaviour
         //Animation and sound effect
         Debug.Log("Performing action for Right Click EarthEarthEarth");
 
-        GameObject pylon = (GameObject)Instantiate(Resources.Load<GameObject>("Pylon"), transform.position, Quaternion.identity);
-        GameObject player = this.gameObject;
-        pylon.GetComponent<Pylon>().SetPlayerObject(player);
-        pylon.GetComponent<Pylon>().SetOrbType(OrbType.Earth, earthOrb, emptyOrb);
+        CreatePylon(OrbType.Earth, earthOrb, emptyOrb);
     }
 
 
@@ -332,7 +344,7 @@ public class OrbManager : MonoBehaviour
     // 11 Cast Earth Fire Earth
     private void CombinationAction_EarthFireEarth0()
     {
-        // Action for left-click Orb1=0, Orb2=1, Orb3=2 combination
+        
         Debug.Log("Performing action for Left Click EarthFireEarth");
         
 
@@ -348,7 +360,7 @@ public class OrbManager : MonoBehaviour
     // 13 Cast Earth Fire Earth
     private void CombinationAction_EarthWaterEarth0()
     {
-        // Action for left-click Orb1=0, Orb2=1, Orb3=2 combination
+        
         Debug.Log("Performing action for Left Click EarthWaterEarth");
     }
 
@@ -361,7 +373,7 @@ public class OrbManager : MonoBehaviour
     // 15 Cast Earth Water Water
     private void CombinationAction_EarthWaterWater0()
     {
-        // Action for left-click Orb1=0, Orb2=1, Orb3=2 combination
+        
         Debug.Log("Performing action for Left Click EarthWaterWater");
     }
 
@@ -374,7 +386,7 @@ public class OrbManager : MonoBehaviour
     // 17 Cast Earth Water Water
     private void CombinationAction_EarthFireFire0()
     {
-        // Action for left-click Orb1=0, Orb2=1, Orb3=2 combination
+        
         Debug.Log("Performing action for Left Click EarthFireFire");
     }
 
@@ -479,6 +491,8 @@ public class OrbManager : MonoBehaviour
     private void CombinationAction_WaterWaterWater1()
     {
         Debug.Log("Performing action for Right Click WaterWaterWater");
+        CreatePylon(OrbType.Water, waterOrb, emptyOrb);
+
     }
 
     // 35 Cast Water Fire Water
@@ -585,6 +599,9 @@ public class OrbManager : MonoBehaviour
     private void CombinationAction_FireFireFire1()
     {
         Debug.Log("Performing action for Right Click FireFireFire");
+
+        CreatePylon(OrbType.Fire, fireOrb, emptyOrb);
+
     }
 
     // 51 Cast Fire Fire Earth

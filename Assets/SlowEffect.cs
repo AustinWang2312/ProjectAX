@@ -2,6 +2,22 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
+
+// which are handled by OnCollisionEnter2D
+// Zones
+// - are handled by OnTriggerEnter2D / OnTriggerExit2D
+// - slowAmount: applied until zone is left (duration optional)
+// - Have Colliders, with IsTrigger marked
+// - No Rigidbody
+// - enemiesInZone to track all enemies inside
+
+//Instances
+// - Slows by slowAmount for Duration
+// - handled by OnCollisionEnter2D
+// - Rigidbody
+// - 2d collider IsTrigger UNmarked
+
 public class SlowEffect : MonoBehaviour
 {
     public float slowAmount;
@@ -21,7 +37,7 @@ public class SlowEffect : MonoBehaviour
         }
     }
 
-    // When an emey enters a slow zone
+    // When an enemy enters a slow zone
     void OnTriggerEnter2D(Collider2D collision)
     {
         Debug.Log("Trigger collided");
