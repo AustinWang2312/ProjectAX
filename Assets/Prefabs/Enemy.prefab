@@ -111,7 +111,7 @@ Transform:
   m_Children:
   - {fileID: 3532005322294924775}
   m_Father: {fileID: 0}
-  m_RootOrder: 17
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &4281369567972579573
 SpriteRenderer:
@@ -153,7 +153,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 1
   m_Sprite: {fileID: -2135585597343286014, guid: 5aa8b770bc43046bc8d993d0d5b7f4a5, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -446,7 +446,7 @@ Canvas:
   m_AdditionalShaderChannelsFlag: 0
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 5
   m_TargetDisplay: 0
 --- !u!114 &7938908457856127614
 MonoBehaviour:
@@ -575,7 +575,7 @@ MonoBehaviour:
   m_MinValue: 0
   m_MaxValue: 1
   m_WholeNumbers: 0
-  m_Value: 0.504
+  m_Value: 1
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -593,6 +593,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthSlider: {fileID: 1646288345338292052}
   enemyHealthManager: {fileID: 85282329033759433}
-  camera: {fileID: 0}
   target: {fileID: 3613751764605345033}
   offset: {x: 0, y: -0.7, z: 0}

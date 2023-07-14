@@ -33,7 +33,7 @@ public class Pylon : MonoBehaviour
     void Start()
     {
         rend = GetComponent<Renderer>();
-        
+        orbManager = player.GetComponent<OrbManager>();
 
         nextEnergyGenerationTime = Time.time + energyGenerationInterval;
 
@@ -41,6 +41,10 @@ public class Pylon : MonoBehaviour
         spriteRenderer.sprite = orbOffSprite;
     }
 
+    //private void Awake()
+    //{
+    //    orbManager = player.GetComponent<OrbManager>();
+    //}
     // The mesh goes red when the mouse is over it...
     void OnMouseEnter()
     {

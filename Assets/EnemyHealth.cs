@@ -30,7 +30,6 @@ public class EnemyHealth : MonoBehaviour
 
     private void Update()
     {
-        TakeFlatDamage(0.01f);
     }
 
 }

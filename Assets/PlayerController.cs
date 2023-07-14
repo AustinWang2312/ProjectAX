@@ -8,7 +8,7 @@ public class PlayerController : MonoBehaviour
     public float speed = 2.5f;
     public Rigidbody2D rb;
     private Vector2 moveDirection;
-    private Vector2 mousePosition;
+    private Vector3 mousePosition;
 
     private Transform mainCameraTransform;
     private Vector3 cameraOffset;
@@ -44,11 +44,7 @@ public class PlayerController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        // Face the mouse position
-        mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        Vector2 lookDirection = mousePosition - rb.position;
-        float angle = Mathf.Atan2(lookDirection.y, lookDirection.x) * Mathf.Rad2Deg - 90f;
-        rb.rotation = angle;
+        
 
         // Apply movement
         rb.MovePosition(rb.position + moveDirection * speed * Time.fixedDeltaTime);
@@ -57,6 +53,16 @@ public class PlayerController : MonoBehaviour
         Vector3 desiredCameraPosition = transform.position + cameraOffset;
         Vector3 smoothedCameraPosition = Vector3.Lerp(mainCameraTransform.position, desiredCameraPosition, smoothSpeed);
         mainCameraTransform.position = smoothedCameraPosition;
+    }
+
+    private void LateUpdate()
+    {
+        // Face the mouse position
+        mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        Vector2 lookDirection = (Vector2)mousePosition - rb.position;
+        //float angle = Mathf.Atan2(lookDirection.y, lookDirection.x) * Mathf.Rad2Deg - 90f;
+        //rb.rotation = angle;
+        transform.up = lookDirection;
     }
 
     // Function to handle damage taken by the player

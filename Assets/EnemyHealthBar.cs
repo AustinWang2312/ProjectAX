@@ -30,4 +30,38 @@ public class EnemyHealthBar : MonoBehaviour
         transform.position = target.position + offset;
         
     }
+
+    // When collides with a slow effect object
+    void OnCollisionEnter2D(Collision2D collision)
+    {
+        Debug.Log("collided");
+        SlowEffect slowEffect = collision.gameObject.GetComponent<SlowEffect>();
+        if (slowEffect)
+        {
+            Debug.Log("collided slow");
+        }
+    }
+
+    // When entering a slow zone
+    void OnTriggerEnter2D(Collider2D collision)
+    {
+        Debug.Log("collided");
+        SlowEffect slowEffect = collision.gameObject.GetComponent<SlowEffect>();
+
+        if (slowEffect)
+        {
+            Debug.Log("collided slow");
+
+        }
+    }
+
+    // When leaving a slow zone
+    void OnTriggerExit2D(Collider2D collision)
+    {
+        Debug.Log("exited");
+        if (collision.gameObject.CompareTag("SlowEffect"))
+        {
+            Debug.Log("exited slow");
+        }
+    }
 }

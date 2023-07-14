@@ -33,6 +33,8 @@ public class OrbManager : MonoBehaviour
     const int FORGE = 1;
     const int CAST = 0;
 
+    public Transform firePoint;
+
     private Dictionary<string, System.Action> combinationActions;
 
     public enum OrbType
@@ -62,9 +64,9 @@ public class OrbManager : MonoBehaviour
         {
             secondaryOrbs[i] = OrbType.Empty;
         }
-        secondaryOrbs[0] = OrbType.Water;
-        secondaryOrbs[1] = OrbType.Water;
-        secondaryOrbs[2] = OrbType.Water;
+        secondaryOrbs[0] = OrbType.Fire;
+        secondaryOrbs[1] = OrbType.Fire;
+        secondaryOrbs[2] = OrbType.Fire;
         
         
         currentOrbs = primaryOrbs;
@@ -569,7 +571,14 @@ public class OrbManager : MonoBehaviour
     // 49 Cast Fire Fire Fire
     private void CombinationAction_FireFireFire0()
     {
-        Debug.Log("Performing action for Left Click FireFireFire");
+        //add modifiers later
+        float baseDamage = 100f;
+        Debug.Log("Performing action for Left Click FireFireFire: Fireball");
+        int projectileSpeed = 10;
+        GameObject fireball = (GameObject)Instantiate(Resources.Load<GameObject>("Fireball"), firePoint.position, Quaternion.identity);
+        fireball.GetComponent<FlatDamage>().SetDamage(baseDamage);
+        Rigidbody2D rb = fireball.GetComponent<Rigidbody2D>();
+        rb.velocity = firePoint.up * projectileSpeed;
     }
 
     // 50 Forge Fire Fire Fire

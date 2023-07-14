@@ -5,7 +5,7 @@ using UnityEngine;
 public class EnemyController : MonoBehaviour
 {
     public float defaultSpeed = 2.0f;
-    private float currentSpeed;
+    [SerializeField] float currentSpeed;
     private Transform target;
     public Rigidbody2D rb;
     Vector2 moveDirection;
@@ -47,16 +47,25 @@ public class EnemyController : MonoBehaviour
     }
 
     //function to slow the enemy once per collision
+    // reduces speed upon collision, returns speed after duration
     public void SlowOnce(float slowAmount, float duration)
     {
         StartCoroutine(SlowEffect(slowAmount, duration));
     }
 
-    //function to slow the enemy once per collision
-    public void SlowContinuous(float slowAmount, float duration)
+    //function to slow the enemy continuously
+    public void SlowContinuous(float slowAmount)
     {
-        StartCoroutine(SlowZone(slowAmount, duration));
+        currentSpeed *= slowAmount;
     }
+
+    //function to slow the enemy continuously
+    public void RemoveSlowContinuous(float slowAmount)
+    {
+        currentSpeed /= slowAmount;
+    }
+
+
 
 
 
@@ -64,7 +73,8 @@ public class EnemyController : MonoBehaviour
     {
         currentSpeed *= slowAmount;
         yield return new WaitForSeconds(duration);
-        currentSpeed = defaultSpeed;
+        currentSpeed /= slowAmount;
+        currentSpeed = Mathf.Min(currentSpeed, defaultSpeed);
     }
 
 
@@ -78,48 +88,43 @@ public class EnemyController : MonoBehaviour
         }
     }
 
-    // When collides with a slow effect object
-    void OnCollisionEnter2D(Collision2D collision)
-    {
-        Debug.Log("collided");
-        if (collision.gameObject.CompareTag("SlowEffect"))
-        {
-            Debug.Log("collided slow");
-            SlowEffect slowEffect = collision.gameObject.GetComponent<SlowEffect>();
-            if (slowEffect != null)
-            {
-                SlowOnce(slowEffect.slowAmount, slowEffect.duration);
-            }
-        }
-    }
+    //// When collides with a slow effect object
+    //void OnCollisionEnter2D(Collision2D collision)
+    //{
+    //    Debug.Log("collided");
+    //    SlowEffect slowEffect = collision.gameObject.GetComponent<SlowEffect>();
+    //    if (slowEffect)
+    //    {
+    //        Debug.Log("collided slow");
+    //        SlowOnce(slowEffect.slowAmount, slowEffect.duration);
+    //    }
+    //}
 
-    // When entering a slow zone
-    void OnTriggerEnter2D(Collider2D collision)
-    {
-        Debug.Log("collided");
-        if (collision.gameObject.CompareTag("SlowEffect"))
-        {
-            Debug.Log("collided slow");
-            SlowEffect slowEffect = collision.gameObject.GetComponent<SlowEffect>();
-            if (slowEffect != null)
-            {
-                isSlowed = true;
-                SlowContinuous(slowEffect.slowAmount, slowEffect.duration);
-            }
-        }
-    }
+    //// When entering a slow zone
+    //void OnTriggerEnter2D(Collider2D collision)
+    //{
+    //    Debug.Log("collided");
+    //    SlowEffect slowEffect = collision.gameObject.GetComponent<SlowEffect>();
 
-    // When leaving a slow zone
-    void OnTriggerExit2D(Collider2D collision)
-    {
-        Debug.Log("exited");
-        if (collision.gameObject.CompareTag("SlowEffect"))
-        {
-            Debug.Log("exited slow");
-            isSlowed = false;
-            currentSpeed = defaultSpeed;
-        }
-    }
+    //    if (slowEffect)
+    //    {
+    //        Debug.Log("collided slow");
+    //        isSlowed = true;
+    //        SlowContinuous(slowEffect.slowAmount, slowEffect.duration);
+    //    }
+    //}
+
+    //// When leaving a slow zone
+    //void OnTriggerExit2D(Collider2D collision)
+    //{
+    //    Debug.Log("exited");
+    //    if (collision.gameObject.CompareTag("SlowEffect"))
+    //    {
+    //        Debug.Log("exited slow");
+    //        isSlowed = false;
+    //        currentSpeed = defaultSpeed;
+    //    }
+    //}
 
 
 }
