@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Cursor : MonoBehaviour
 {
+    Vector2 mousePosition;
     // Start is called before the first frame update
     void Start()
     {
@@ -14,5 +15,16 @@ public class Cursor : MonoBehaviour
     void Update()
     {
         
+    }
+
+    private void FixedUpdate()
+    {
+       
+    }
+
+    private void LateUpdate()
+    {
+        mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        transform.position = mousePosition;
     }
 }
