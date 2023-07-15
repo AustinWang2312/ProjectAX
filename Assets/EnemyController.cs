@@ -11,7 +11,7 @@ public class EnemyController : MonoBehaviour
     Vector2 moveDirection;
 
     private bool isKnockedBack = false;
-
+    private bool isStunned = false;
 
 
     // Start is called before the first frame update
@@ -25,21 +25,18 @@ public class EnemyController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (target)
+        if (target &!isStunned)
         {
             Vector2 direction = (target.position - transform.position).normalized;
             float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg - 90f;
             rb.rotation = angle;
-            moveDirection = direction;
-
-            
+            moveDirection = direction;            
         }
-
     }
 
     private void FixedUpdate()
     {
-        if (target & !isKnockedBack)
+        if (target & !isKnockedBack &!isStunned)
         {
             rb.velocity = new Vector2(moveDirection.x, moveDirection.y) * currentSpeed;
         }
@@ -92,10 +89,17 @@ public class EnemyController : MonoBehaviour
         currentSpeed = Mathf.Min(currentSpeed, defaultSpeed);
     }
 
+    public void Stun(float duration)
+    {
+        StartCoroutine(StunEffect(duration));
+    }
 
-  
+    private IEnumerator StunEffect(float duration)
+    {
+        isStunned = true;
+        rb.velocity = new Vector2(0, 0);
 
- 
-
-
+        yield return new WaitForSeconds(duration);
+        isStunned = false;
+    }
 }
