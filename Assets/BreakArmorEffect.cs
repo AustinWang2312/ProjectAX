@@ -17,7 +17,6 @@ public class BreakArmorEffect : MonoBehaviour
         {
             Debug.Log("armor broken");
             enemy.BreakArmor(breakAmount, duration);
-
         }
     }
 

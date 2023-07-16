@@ -12,6 +12,7 @@ public class EnemyController : MonoBehaviour
 
     private bool isKnockedBack = false;
     private bool isStunned = false;
+    private int stunInstances = 0;
 
 
     // Start is called before the first frame update
@@ -97,9 +98,15 @@ public class EnemyController : MonoBehaviour
     private IEnumerator StunEffect(float duration)
     {
         isStunned = true;
+        stunInstances++;
         rb.velocity = new Vector2(0, 0);
 
         yield return new WaitForSeconds(duration);
-        isStunned = false;
+        stunInstances--;
+        if (stunInstances <= 0)
+        {
+            isStunned = false;
+        }
+        
     }
 }
