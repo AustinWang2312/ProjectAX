@@ -223,8 +223,8 @@ MonoBehaviour:
   currentHealth: 100
   maxHealth: 100
   healthBar: {fileID: 2910935449439807337}
-  maxArmor: 0
-  currentArmor: 0
+  maxArmor: 0.1
+  currentArmor: 0.1
   burnDuration: 0
   totalBurnDPS: 0
 --- !u!114 &7115486797674922890
