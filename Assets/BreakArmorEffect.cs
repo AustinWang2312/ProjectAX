@@ -8,6 +8,12 @@ public class BreakArmorEffect : MonoBehaviour
     public float breakAmount;
     public float duration;
 
+    public void Initialize(float breakAmount, float duration)
+    {
+        this.breakAmount = breakAmount;
+        this.duration = duration;
+    }
+
     // When colliding with a stun effect object
     void OnCollisionEnter2D(Collision2D collision)
     {

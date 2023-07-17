@@ -99,6 +99,7 @@ public class EnemyController : MonoBehaviour
     {
         isStunned = true;
         stunInstances++;
+        rb.bodyType = RigidbodyType2D.Kinematic;
         rb.velocity = new Vector2(0, 0);
 
         yield return new WaitForSeconds(duration);
@@ -106,6 +107,7 @@ public class EnemyController : MonoBehaviour
         if (stunInstances <= 0)
         {
             isStunned = false;
+            rb.bodyType = RigidbodyType2D.Dynamic;
         }
         
     }

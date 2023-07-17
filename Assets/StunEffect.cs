@@ -21,6 +21,11 @@ public class StunEffect : MonoBehaviour
 {
     public float duration;
 
+    public void Initialize(float duration)
+    {
+        this.duration = duration;
+    }
+
     // When colliding with a stun effect object
     void OnCollisionEnter2D(Collision2D collision)
     {

@@ -9,6 +9,12 @@ public class BurnEffect : MonoBehaviour
     public float burningDPS;
     public float duration;
 
+    public void Initialize(float burnDps, float duration)
+    {
+        this.burningDPS = burnDps;
+        this.duration = duration;
+    }
+
 
     // When colliding with a burn effect object
     void OnCollisionEnter2D(Collision2D collision)

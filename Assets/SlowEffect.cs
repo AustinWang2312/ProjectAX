@@ -24,6 +24,11 @@ public class SlowEffect : MonoBehaviour
     public float duration;
     private List<EnemyController> enemiesInZone = new List<EnemyController>();
 
+    public void Initialize(float slowAmount, float duration)
+    {
+        this.slowAmount = slowAmount;
+        this.duration = duration;
+    }
 
     // When collides with a slow effect object
     void OnCollisionEnter2D(Collision2D collision)

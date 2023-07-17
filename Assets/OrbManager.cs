@@ -47,6 +47,271 @@ public class OrbManager : MonoBehaviour
         Empty
     }
 
+    public class SpellStats
+    {
+        public float Area { get; set; }
+        public float ProjectileSpeed { get; set; }
+        public float HpPercentDmg { get; set; }
+        public float FlatDmg { get; set; }
+
+        public float WeakenAmount { get; set; }
+        public float WeakenDuration { get; set; }
+        public float BurningDPS { get; set; }
+        public float BurningDuration { get; set; }
+        public float BreakArmorAmount { get; set; }
+        public float BreakDuration { get; set; }
+        public float KnockbackForce { get; set; }
+        public float Healing { get; set; }
+        public float HasteAmount { get; set; }
+        public float HasteDuration { get; set; }
+        public float ShieldAmount { get; set; }
+        public float ResistanceAmount { get; set; }
+        public float ResistanceDuration { get; set; }
+        public float SlowAmount { get; set; }
+        public float SlowDuration { get; set; }
+        public float StunDuration { get; set; }
+
+
+        public class Builder
+        {
+            private SpellStats _spellStats;
+
+            public Builder()
+            {
+                _spellStats = new SpellStats();
+            }
+
+            public Builder WithArea(float area)
+            {
+                _spellStats.Area = area;
+                return this;
+            }
+
+            public Builder WithProjectileSpeed(float projectileSpeed)
+            {
+                _spellStats.ProjectileSpeed = projectileSpeed;
+                return this;
+            }
+
+            public Builder WithHpPercentDmg(float hpPercentDmg)
+            {
+                _spellStats.HpPercentDmg = hpPercentDmg;
+                return this;
+            }
+
+            public Builder WithFlatDmg(float flatDmg)
+            {
+                _spellStats.FlatDmg = flatDmg;
+                return this;
+            }
+
+            public Builder WithWeakenAmount(float weakenAmount)
+            {
+                _spellStats.WeakenAmount = weakenAmount;
+                return this;
+            }
+
+            public Builder WithWeakenDuration(float weakenDuration)
+            {
+                _spellStats.WeakenDuration = weakenDuration;
+                return this;
+            }
+
+            public Builder WithBurningDPS(float burningDPS)
+            {
+                _spellStats.BurningDPS = burningDPS;
+                return this;
+            }
+
+            public Builder WithBurningDuration(float burningDuration)
+            {
+                _spellStats.BurningDuration = burningDuration;
+                return this;
+            }
+
+            public Builder WithBreakArmorAmount(float breakArmorAmount)
+            {
+                _spellStats.BreakArmorAmount = breakArmorAmount;
+                return this;
+            }
+
+            public Builder WithBreakDuration(float breakDuration)
+            {
+                _spellStats.BreakDuration = breakDuration;
+                return this;
+            }
+
+            public Builder WithKnockbackForce(float knockbackForce)
+            {
+                _spellStats.KnockbackForce = knockbackForce;
+                return this;
+            }
+
+            public Builder WithHealing(float healing)
+            {
+                _spellStats.Healing = healing;
+                return this;
+            }
+
+            public Builder WithHasteAmount(float hasteAmount)
+            {
+                _spellStats.HasteAmount = hasteAmount;
+                return this;
+            }
+
+            public Builder WithHasteDuration(float hasteDuration)
+            {
+                _spellStats.HasteDuration = hasteDuration;
+                return this;
+            }
+
+            public Builder WithShieldAmount(float shieldAmount)
+            {
+                _spellStats.ShieldAmount = shieldAmount;
+                return this;
+            }
+
+            public Builder WithResistanceAmount(float resistanceAmount)
+            {
+                _spellStats.ResistanceAmount = resistanceAmount;
+                return this;
+            }
+
+            public Builder WithResistanceDuration(float resistanceDuration)
+            {
+                _spellStats.ResistanceDuration = resistanceDuration;
+                return this;
+            }
+
+            public Builder WithSlowAmount(float slowAmount)
+            {
+                _spellStats.SlowAmount = slowAmount;
+                return this;
+            }
+
+            public Builder WithSlowDuration(float slowDuration)
+            {
+                _spellStats.SlowDuration = slowDuration;
+                return this;
+            }
+
+            public Builder WithStunDuration(float stunDuration)
+            {
+                _spellStats.StunDuration = stunDuration;
+                return this;
+            }
+
+            public SpellStats Build()
+            {
+                return _spellStats;
+            }
+        }
+    }
+
+    public void ApplySpellStatsToGameObject(SpellStats spellStats, GameObject gameObject)
+    {
+        //var areaComponent = gameObject.GetComponent<YourAreaComponent>();
+        //if (areaComponent != null)
+        //{
+        //    areaComponent.SetArea(spellStats.Area);
+        //}
+
+
+        //Setting projectile velocity
+        Rigidbody2D rb = gameObject.GetComponent<Rigidbody2D>();
+        if (gameObject != null && rb != null && spellStats.ProjectileSpeed != 0)
+        {
+            rb.velocity = firePoint.up * spellStats.ProjectileSpeed;
+        }
+
+        //var hpPercentDmgComponent = gameObject.GetComponent<YourHpPercentDmgComponent>();
+        //if (hpPercentDmgComponent != null)
+        //{
+        //    hpPercentDmgComponent.SetDamage(spellStats.HpPercentDmg);
+        //}
+
+        var flatDmgComponent = gameObject.GetComponent<FlatDamage>();
+        if (flatDmgComponent != null)
+        {
+            flatDmgComponent.SetDamage(spellStats.FlatDmg);
+        }
+
+        //var weakenAmountComponent = gameObject.GetComponent<YourWeakenAmountComponent>();
+        //if (weakenAmountComponent != null)
+        //{
+        //    weakenAmountComponent.SetWeakenAmount(spellStats.WeakenAmount);
+        //}
+
+        //var weakenDurationComponent = gameObject.GetComponent<YourWeakenDurationComponent>();
+        //if (weakenDurationComponent != null)
+        //{
+        //    weakenDurationComponent.SetWeakenDuration(spellStats.WeakenDuration);
+        //}
+
+        var burningComponent = gameObject.GetComponent<BurnEffect>();
+        if (burningComponent != null)
+        {
+            burningComponent.Initialize(spellStats.BurningDPS, spellStats.BurningDuration);
+        }
+
+        var breakArmorComponent = gameObject.GetComponent<BreakArmorEffect>();
+        if (breakArmorComponent != null)
+        {
+            breakArmorComponent.Initialize(spellStats.BreakArmorAmount, spellStats.BreakDuration); ;
+        }
+
+
+        var knockbackForceComponent = gameObject.GetComponent<KnockbackEffect>();
+        if (knockbackForceComponent != null)
+        {
+            knockbackForceComponent.SetKnockBack(spellStats.KnockbackForce);
+        }
+
+        //var healingComponent = gameObject.GetComponent<YourHealingComponent>();
+        //if (healingComponent != null)
+        //{
+        //    healingComponent.SetHealing(spellStats.Healing);
+        //}
+
+        //var hasteAmountComponent = gameObject.GetComponent<YourHasteAmountComponent>();
+        //if (hasteAmountComponent != null)
+        //{
+        //    hasteAmountComponent.SetHasteAmount(spellStats.HasteAmount);
+        //}
+
+        //var hasteDurationComponent = gameObject.GetComponent<YourHasteDurationComponent>();
+        //if (hasteDurationComponent != null)
+        //{
+        //    hasteDurationComponent.SetHasteDuration(spellStats.HasteDuration);
+        //}
+
+        //var shieldAmountComponent = gameObject.GetComponent<YourShieldAmountComponent>();
+        //if (shieldAmountComponent != null)
+        //{
+        //    shieldAmountComponent.SetShieldAmount(spellStats.ShieldAmount);
+        //}
+
+        //var resistanceAmountComponent = gameObject.GetComponent<YourResistanceAmountComponent>();
+        //if (resistanceAmountComponent != null)
+        //{
+        //    resistanceAmountComponent.SetResistanceAmount(spellStats.ResistanceAmount);
+        //}
+
+        var slowComponent = gameObject.GetComponent<SlowEffect>();
+        if (slowComponent != null)
+        {
+            slowComponent.Initialize(spellStats.SlowAmount, spellStats.SlowDuration);
+        }
+
+        
+
+        var stunComponent = gameObject.GetComponent<StunEffect>();
+        if (stunComponent != null)
+        {
+            stunComponent.Initialize(spellStats.StunDuration);
+        }
+    }
+
     // Start is called before the first frame update
     void Start()
     {
@@ -499,6 +764,23 @@ public class OrbManager : MonoBehaviour
     private void CombinationAction_WaterFireWater0()
     {
         Debug.Log("Performing action for Left Click WaterFireWater");
+        
+        float baseDamage = 25f;
+        float projectileSpeed = 15f;
+        float baseStun = 2f;
+        float baseBreak = 0.1f;
+
+        ////add modifiers later in the builder function
+        //float totalDamage = baseDamage;
+        //float totalProjectileSpeed = projectileSpeed;
+        //float totalStun = baseStun;
+        //float totalBreak = baseBreak;
+
+
+        GameObject icicle = (GameObject)Instantiate(Resources.Load<GameObject>("Icicle"), firePoint.position, transform.rotation);
+        icicle.GetComponent<FlatDamage>().SetDamage(baseDamage);
+        Rigidbody2D rb = icicle.GetComponent<Rigidbody2D>();
+        rb.velocity = firePoint.up * projectileSpeed;
     }
 
     // 36 Forge Water Fire Water
