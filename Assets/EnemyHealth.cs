@@ -60,20 +60,6 @@ public class EnemyHealth : MonoBehaviour
 
     public void ShowDamage(float amount)
     {
-        //// Subtract the damage from the enemy's health
-
-        //// Create a damage text object
-        //GameObject damageTextObject = DamageTextPool.Instance.Get();
-        //Vector3 offset = new Vector2(0, -1);
-        //damageTextObject.transform.position = transform.position + offset;
-
-        //// Get the TextMeshPro component and set the text to the damage dealt
-        //TextMeshPro textMesh = damageTextObject.GetComponent<TextMeshPro>();
-        //textMesh.text = amount.ToString();
-
-        //// Return the damage text to the pool after a few seconds
-        //StartCoroutine(ReturnAfterSeconds(damageTextObject, 0.2f));
-
         DamageTextPool.Instance.ShowDamage(amount, this.transform);
     }
 

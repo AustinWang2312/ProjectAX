@@ -453,7 +453,25 @@ public class OrbManager : MonoBehaviour
     // 23 Cast Water Earth Water
     private void CombinationAction_WaterEarthWater0()
     {
+        //Geyser
         Debug.Log("Performing action for Left Click WaterEarthWater");
+
+        //add modifiers later
+        //TODO: fix area
+        float area = 100f;
+        float objectDuration = 0.2f;
+        float knockbackForce = 25f;
+        float hpPercentDmg = 0.1f;
+
+        SpellStats geyserStats = new SpellStats.Builder(this.playerStats)
+            .WithArea(area)
+            .WithKnockbackForce(knockbackForce)
+            .WithObjectDuration(objectDuration)
+            .WithHpPercentDmg(hpPercentDmg)
+            .Build();
+
+        GameObject geyser = (GameObject)Instantiate(Resources.Load<GameObject>("Geyser"), cursorPoint.position, Quaternion.identity);
+        ApplySpellStatsToGameObject(geyserStats, geyser);
     }
 
     // 24 Forge Water Earth Water
