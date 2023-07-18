@@ -2,14 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class FlatDamage : MonoBehaviour, ISpellComponent
+public class HpPercentDamage : MonoBehaviour, ISpellComponent
 {
-    //This "base" stat refers to post modifier, pre enemy reduction damage
     public float baseDamage;
 
     public void ApplyStats(SpellStats spellStats)
     {
-        baseDamage = spellStats.FlatDmg;
+        baseDamage = spellStats.HpPercentDmg;
     }
 
     void OnCollisionEnter2D(Collision2D collision)
@@ -18,8 +17,8 @@ public class FlatDamage : MonoBehaviour, ISpellComponent
         EnemyHealth enemy = collision.gameObject.GetComponent<EnemyHealth>();
         if (enemy)
         {
-            Debug.Log("flat damage dealt");
-            enemy.TakeFlatDamage(baseDamage);
+            Debug.Log("hp percent damage dealt");
+            enemy.TakeHpPercentDamage(baseDamage);
         }
     }
 
@@ -31,21 +30,9 @@ public class FlatDamage : MonoBehaviour, ISpellComponent
 
         if (enemy)
         {
-            Debug.Log("zone flat damage dealt");
-            enemy.TakeFlatDamage(baseDamage);
+            Debug.Log("zone hp percent damage dealt");
+            enemy.TakeHpPercentDamage(baseDamage);
 
         }
-    }
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 }

@@ -2,13 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class KnockbackEffect : MonoBehaviour
+public class KnockbackEffect : MonoBehaviour, ISpellComponent
 {
     [SerializeField] float knockbackForce;
 
-    public void SetKnockBack(float force)
+    public void ApplyStats(SpellStats spellStats)
     {
-        knockbackForce = force;
+        knockbackForce = spellStats.KnockbackForce;
     }
 
 

@@ -2,14 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Disappear : MonoBehaviour
+public class Disappear : MonoBehaviour,ISpellComponent
 {
-    private float duration;
+    public float duration;
 
-
-    public void Initialize(float duration)
+    public void ApplyStats(SpellStats spellStats)
     {
-        this.duration = duration;
+        this.duration = spellStats.ObjectDuration;
         Destroy(gameObject, duration);
     }
 }

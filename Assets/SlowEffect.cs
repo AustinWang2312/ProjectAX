@@ -18,16 +18,16 @@ using UnityEngine;
 // - Rigidbody
 // - 2d collider IsTrigger UNmarked
 
-public class SlowEffect : MonoBehaviour
+public class SlowEffect : MonoBehaviour, ISpellComponent
 {
     public float slowAmount;
     public float duration;
     private List<EnemyController> enemiesInZone = new List<EnemyController>();
 
-    public void Initialize(float slowAmount, float duration)
+    public void ApplyStats(SpellStats spellStats)
     {
-        this.slowAmount = slowAmount;
-        this.duration = duration;
+        this.slowAmount = spellStats.SlowAmount;
+        this.duration = spellStats.SlowDuration;
     }
 
     // When collides with a slow effect object
@@ -66,7 +66,9 @@ public class SlowEffect : MonoBehaviour
         if (enemy)
         {
             Debug.Log("exited slow");
+            enemiesInZone.Remove(enemy);
             enemy.RemoveSlowContinuous(slowAmount);
+            
         }
     }
 
@@ -76,6 +78,7 @@ public class SlowEffect : MonoBehaviour
         foreach (var enemy in enemiesInZone)
         {
             enemy.RemoveSlowContinuous(slowAmount);
+            Debug.Log("Slow removed");
         }
     }
 

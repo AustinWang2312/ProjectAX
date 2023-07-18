@@ -2,16 +2,17 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BreakArmorEffect : MonoBehaviour
+public class BreakArmorEffect : MonoBehaviour, ISpellComponent
 {
     //should be between 0+ where 1 is 100% of damage
     public float breakAmount;
     public float duration;
 
-    public void Initialize(float breakAmount, float duration)
+    public void ApplyStats(SpellStats spellStats)
     {
-        this.breakAmount = breakAmount;
-        this.duration = duration;
+        
+        this.breakAmount = spellStats.BreakArmorAmount;
+        this.duration = spellStats.BreakDuration;
     }
 
     // When colliding with a stun effect object

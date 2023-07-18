@@ -5,7 +5,8 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    public float speed = 2.5f;
+    public float currentSpeed = 5.0f;
+    public float defaultSpeed = 5.0f;
     public Rigidbody2D rb;
     private Vector2 moveDirection;
     private Vector3 mousePosition;
@@ -44,7 +45,7 @@ public class PlayerController : MonoBehaviour
         moveDirection = new Vector2(moveX, moveY).normalized;
 
         // Apply movement
-        rb.MovePosition(rb.position + moveDirection * speed * Time.fixedDeltaTime);
+        rb.MovePosition(rb.position + moveDirection * currentSpeed * Time.fixedDeltaTime);
 
         // Update camera position smoothly
         Vector3 desiredCameraPosition = transform.position + cameraOffset;
@@ -62,8 +63,7 @@ public class PlayerController : MonoBehaviour
         // Face the mouse position
         mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         Vector2 lookDirection = (Vector2)mousePosition - rb.position;
-        //float angle = Mathf.Atan2(lookDirection.y, lookDirection.x) * Mathf.Rad2Deg - 90f;
-        //rb.rotation = angle;
+        
         transform.up = lookDirection;
 
 
@@ -71,7 +71,20 @@ public class PlayerController : MonoBehaviour
 
     }
 
-    
+    public void SpeedUp(float hasteAmount, float duration)
+    {
+        StartCoroutine(HasteEffect(hasteAmount, duration));
+    }
+
+    private IEnumerator HasteEffect(float hasteAmount, float duration)
+    {
+        currentSpeed *= (1 + hasteAmount);
+        Debug.Log(currentSpeed);
+        yield return new WaitForSeconds(duration);
+        currentSpeed /= (1 + hasteAmount);
+        currentSpeed = Mathf.Min(currentSpeed, defaultSpeed);
+    }
+
 
 
 }

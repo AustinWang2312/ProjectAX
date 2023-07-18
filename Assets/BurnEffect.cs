@@ -2,17 +2,17 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BurnEffect : MonoBehaviour
+public class BurnEffect : MonoBehaviour, ISpellComponent
 {
     //Only used for zone
     private List<EnemyHealth> burningEnemies = new List<EnemyHealth>();
     public float burningDPS;
     public float duration;
 
-    public void Initialize(float burnDps, float duration)
+    public void ApplyStats(SpellStats spellStats)
     {
-        this.burningDPS = burnDps;
-        this.duration = duration;
+        this.burningDPS = spellStats.BurningDPS;
+        this.duration = spellStats.BurningDuration;
     }
 
 

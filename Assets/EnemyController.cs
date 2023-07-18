@@ -73,20 +73,21 @@ public class EnemyController : MonoBehaviour
     //function to slow the enemy continuously
     public void SlowContinuous(float slowAmount)
     {
-        currentSpeed *= slowAmount;
+        currentSpeed *= (1 - slowAmount);
     }
 
     //function to slow the enemy continuously
     public void RemoveSlowContinuous(float slowAmount)
     {
-        currentSpeed /= slowAmount;
+        currentSpeed /= (1 - slowAmount);
+        Debug.Log("Slow successfully removed");
     }
 
     private IEnumerator SlowEffect(float slowAmount, float duration)
     {
-        currentSpeed *= slowAmount;
+        currentSpeed *= (1 - slowAmount);
         yield return new WaitForSeconds(duration);
-        currentSpeed /= slowAmount;
+        currentSpeed /= (1 - slowAmount);
         currentSpeed = Mathf.Min(currentSpeed, defaultSpeed);
     }
 

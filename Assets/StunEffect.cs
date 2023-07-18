@@ -17,13 +17,13 @@ using UnityEngine;
 // - Rigidbody
 // - 2d collider IsTrigger UNmarked
 
-public class StunEffect : MonoBehaviour
+public class StunEffect : MonoBehaviour, ISpellComponent
 {
     public float duration;
 
-    public void Initialize(float duration)
+    public void ApplyStats(SpellStats spellStats)
     {
-        this.duration = duration;
+        this.duration = spellStats.StunDuration;
     }
 
     // When colliding with a stun effect object

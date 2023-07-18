@@ -34,8 +34,10 @@ public class OrbManager : MonoBehaviour
     const int CAST = 0;
 
     public Transform firePoint;
+    public Transform cursorPoint;
 
     public PlayerHealth playerHealth;
+    public PlayerStats playerStats;
 
     private Dictionary<string, System.Action> combinationActions;
 
@@ -47,274 +49,16 @@ public class OrbManager : MonoBehaviour
         Empty
     }
 
-    public class SpellStats
-    {
-        public float Area { get; set; }
-        public float ProjectileSpeed { get; set; }
-        public float HpPercentDmg { get; set; }
-        public float FlatDmg { get; set; }
+    
 
-        public float WeakenAmount { get; set; }
-        public float WeakenDuration { get; set; }
-        public float BurningDPS { get; set; }
-        public float BurningDuration { get; set; }
-        public float BreakArmorAmount { get; set; }
-        public float BreakDuration { get; set; }
-        public float KnockbackForce { get; set; }
-        public float Healing { get; set; }
-        public float HasteAmount { get; set; }
-        public float HasteDuration { get; set; }
-        public float ShieldAmount { get; set; }
-        public float ResistanceAmount { get; set; }
-        public float ResistanceDuration { get; set; }
-        public float SlowAmount { get; set; }
-        public float SlowDuration { get; set; }
-        public float StunDuration { get; set; }
-
-
-        public class Builder
-        {
-            private SpellStats _spellStats;
-
-            public Builder()
-            {
-                _spellStats = new SpellStats();
-            }
-
-            public Builder WithArea(float area)
-            {
-                _spellStats.Area = area;
-                return this;
-            }
-
-            public Builder WithProjectileSpeed(float projectileSpeed)
-            {
-                _spellStats.ProjectileSpeed = projectileSpeed;
-                return this;
-            }
-
-            public Builder WithHpPercentDmg(float hpPercentDmg)
-            {
-                _spellStats.HpPercentDmg = hpPercentDmg;
-                return this;
-            }
-
-            public Builder WithFlatDmg(float flatDmg)
-            {
-                _spellStats.FlatDmg = flatDmg;
-                return this;
-            }
-
-            public Builder WithWeakenAmount(float weakenAmount)
-            {
-                _spellStats.WeakenAmount = weakenAmount;
-                return this;
-            }
-
-            public Builder WithWeakenDuration(float weakenDuration)
-            {
-                _spellStats.WeakenDuration = weakenDuration;
-                return this;
-            }
-
-            public Builder WithBurningDPS(float burningDPS)
-            {
-                _spellStats.BurningDPS = burningDPS;
-                return this;
-            }
-
-            public Builder WithBurningDuration(float burningDuration)
-            {
-                _spellStats.BurningDuration = burningDuration;
-                return this;
-            }
-
-            public Builder WithBreakArmorAmount(float breakArmorAmount)
-            {
-                _spellStats.BreakArmorAmount = breakArmorAmount;
-                return this;
-            }
-
-            public Builder WithBreakDuration(float breakDuration)
-            {
-                _spellStats.BreakDuration = breakDuration;
-                return this;
-            }
-
-            public Builder WithKnockbackForce(float knockbackForce)
-            {
-                _spellStats.KnockbackForce = knockbackForce;
-                return this;
-            }
-
-            public Builder WithHealing(float healing)
-            {
-                _spellStats.Healing = healing;
-                return this;
-            }
-
-            public Builder WithHasteAmount(float hasteAmount)
-            {
-                _spellStats.HasteAmount = hasteAmount;
-                return this;
-            }
-
-            public Builder WithHasteDuration(float hasteDuration)
-            {
-                _spellStats.HasteDuration = hasteDuration;
-                return this;
-            }
-
-            public Builder WithShieldAmount(float shieldAmount)
-            {
-                _spellStats.ShieldAmount = shieldAmount;
-                return this;
-            }
-
-            public Builder WithResistanceAmount(float resistanceAmount)
-            {
-                _spellStats.ResistanceAmount = resistanceAmount;
-                return this;
-            }
-
-            public Builder WithResistanceDuration(float resistanceDuration)
-            {
-                _spellStats.ResistanceDuration = resistanceDuration;
-                return this;
-            }
-
-            public Builder WithSlowAmount(float slowAmount)
-            {
-                _spellStats.SlowAmount = slowAmount;
-                return this;
-            }
-
-            public Builder WithSlowDuration(float slowDuration)
-            {
-                _spellStats.SlowDuration = slowDuration;
-                return this;
-            }
-
-            public Builder WithStunDuration(float stunDuration)
-            {
-                _spellStats.StunDuration = stunDuration;
-                return this;
-            }
-
-            public SpellStats Build()
-            {
-                return _spellStats;
-            }
-        }
-    }
-
-    public void ApplySpellStatsToGameObject(SpellStats spellStats, GameObject gameObject)
-    {
-        //var areaComponent = gameObject.GetComponent<YourAreaComponent>();
-        //if (areaComponent != null)
-        //{
-        //    areaComponent.SetArea(spellStats.Area);
-        //}
-
-
-        //Setting projectile velocity
-        Rigidbody2D rb = gameObject.GetComponent<Rigidbody2D>();
-        if (gameObject != null && rb != null && spellStats.ProjectileSpeed != 0)
-        {
-            rb.velocity = firePoint.up * spellStats.ProjectileSpeed;
-        }
-
-        //var hpPercentDmgComponent = gameObject.GetComponent<YourHpPercentDmgComponent>();
-        //if (hpPercentDmgComponent != null)
-        //{
-        //    hpPercentDmgComponent.SetDamage(spellStats.HpPercentDmg);
-        //}
-
-        var flatDmgComponent = gameObject.GetComponent<FlatDamage>();
-        if (flatDmgComponent != null)
-        {
-            flatDmgComponent.SetDamage(spellStats.FlatDmg);
-        }
-
-        //var weakenAmountComponent = gameObject.GetComponent<YourWeakenAmountComponent>();
-        //if (weakenAmountComponent != null)
-        //{
-        //    weakenAmountComponent.SetWeakenAmount(spellStats.WeakenAmount);
-        //}
-
-        //var weakenDurationComponent = gameObject.GetComponent<YourWeakenDurationComponent>();
-        //if (weakenDurationComponent != null)
-        //{
-        //    weakenDurationComponent.SetWeakenDuration(spellStats.WeakenDuration);
-        //}
-
-        var burningComponent = gameObject.GetComponent<BurnEffect>();
-        if (burningComponent != null)
-        {
-            burningComponent.Initialize(spellStats.BurningDPS, spellStats.BurningDuration);
-        }
-
-        var breakArmorComponent = gameObject.GetComponent<BreakArmorEffect>();
-        if (breakArmorComponent != null)
-        {
-            breakArmorComponent.Initialize(spellStats.BreakArmorAmount, spellStats.BreakDuration); ;
-        }
-
-
-        var knockbackForceComponent = gameObject.GetComponent<KnockbackEffect>();
-        if (knockbackForceComponent != null)
-        {
-            knockbackForceComponent.SetKnockBack(spellStats.KnockbackForce);
-        }
-
-        //var healingComponent = gameObject.GetComponent<YourHealingComponent>();
-        //if (healingComponent != null)
-        //{
-        //    healingComponent.SetHealing(spellStats.Healing);
-        //}
-
-        //var hasteAmountComponent = gameObject.GetComponent<YourHasteAmountComponent>();
-        //if (hasteAmountComponent != null)
-        //{
-        //    hasteAmountComponent.SetHasteAmount(spellStats.HasteAmount);
-        //}
-
-        //var hasteDurationComponent = gameObject.GetComponent<YourHasteDurationComponent>();
-        //if (hasteDurationComponent != null)
-        //{
-        //    hasteDurationComponent.SetHasteDuration(spellStats.HasteDuration);
-        //}
-
-        //var shieldAmountComponent = gameObject.GetComponent<YourShieldAmountComponent>();
-        //if (shieldAmountComponent != null)
-        //{
-        //    shieldAmountComponent.SetShieldAmount(spellStats.ShieldAmount);
-        //}
-
-        //var resistanceAmountComponent = gameObject.GetComponent<YourResistanceAmountComponent>();
-        //if (resistanceAmountComponent != null)
-        //{
-        //    resistanceAmountComponent.SetResistanceAmount(spellStats.ResistanceAmount);
-        //}
-
-        var slowComponent = gameObject.GetComponent<SlowEffect>();
-        if (slowComponent != null)
-        {
-            slowComponent.Initialize(spellStats.SlowAmount, spellStats.SlowDuration);
-        }
-
-        
-
-        var stunComponent = gameObject.GetComponent<StunEffect>();
-        if (stunComponent != null)
-        {
-            stunComponent.Initialize(spellStats.StunDuration);
-        }
-    }
+    
 
     // Start is called before the first frame update
     void Start()
     {
+
+        playerStats = new PlayerStats();
+
         //Initialize Orbs carried
         primaryOrbs = new OrbType[maxOrbs];
         secondaryOrbs = new OrbType[maxOrbs];
@@ -528,6 +272,27 @@ public class OrbManager : MonoBehaviour
         GameObject player = this.gameObject;
         pylon.GetComponent<Pylon>().SetPlayerObject(player);
         pylon.GetComponent<Pylon>().SetOrbType(orbType, onSprite, offSprite);
+    }
+
+    private void ApplySpellStatsToGameObject(SpellStats spellStats, GameObject gameObject)
+    {
+
+        //Set Velocity
+        Rigidbody2D rb = gameObject.GetComponent<Rigidbody2D>();
+        Projectile projectile = gameObject.GetComponent<Projectile>();
+        if(rb != null && projectile != null)
+        {
+            rb.velocity = firePoint.up * spellStats.ProjectileSpeed;
+        }
+        
+
+
+
+        var spellComponents = gameObject.GetComponents<ISpellComponent>();
+        foreach (var component in spellComponents)
+        {
+            component.ApplyStats(spellStats);
+        }
     }
 
 
@@ -769,18 +534,20 @@ public class OrbManager : MonoBehaviour
         float projectileSpeed = 15f;
         float baseStun = 2f;
         float baseBreak = 0.1f;
+        float baseBreakDuration = 10f;
 
-        ////add modifiers later in the builder function
-        //float totalDamage = baseDamage;
-        //float totalProjectileSpeed = projectileSpeed;
-        //float totalStun = baseStun;
-        //float totalBreak = baseBreak;
+        ////modifiers are applied in the builder function
 
+        SpellStats icicleStats = new SpellStats.Builder(this.playerStats)
+            .WithProjectileSpeed(projectileSpeed)
+            .WithFlatDmg(baseDamage)
+            .WithStunDuration(baseStun)
+            .WithBreakArmorAmount(baseBreak)
+            .WithBreakDuration(baseBreakDuration)
+            .Build();
 
         GameObject icicle = (GameObject)Instantiate(Resources.Load<GameObject>("Icicle"), firePoint.position, transform.rotation);
-        icicle.GetComponent<FlatDamage>().SetDamage(baseDamage);
-        Rigidbody2D rb = icicle.GetComponent<Rigidbody2D>();
-        rb.velocity = firePoint.up * projectileSpeed;
+        ApplySpellStatsToGameObject(icicleStats, icicle);
     }
 
     // 36 Forge Water Fire Water
@@ -831,7 +598,27 @@ public class OrbManager : MonoBehaviour
     // 43 Cast Fire Earth Earth
     private void CombinationAction_FireEarthEarth0()
     {
+        //Tar pit
         Debug.Log("Performing action for Left Click FireEarthEarth");
+
+        //add modifiers later
+        //TODO: fix area
+        float area = 100f;
+        float objectDuration = 7f;
+        float burningDPS = 5f;
+        float burningDuration = 3f;
+        float slowAmount = 0.3f;
+        
+        SpellStats tarpitStats = new SpellStats.Builder(this.playerStats)
+            .WithArea(area)
+            .WithBurningDPS(burningDPS)
+            .WithBurningDuration(burningDuration)
+            .WithObjectDuration(objectDuration)
+            .WithSlowAmount(slowAmount)
+            .Build();
+
+        GameObject tarpit = (GameObject)Instantiate(Resources.Load<GameObject>("Tarpit"), cursorPoint.position, Quaternion.identity);
+        ApplySpellStatsToGameObject(tarpitStats, tarpit);
     }
 
     // 44 Forge Fire Earth Earth
@@ -869,12 +656,19 @@ public class OrbManager : MonoBehaviour
     {
         //add modifiers later
         float baseDamage = 100f;
+        float projectileSpeed = 10f;
+        float burningDPS = 20f;
+        float burningDuration = 3f;
         Debug.Log("Performing action for Left Click FireFireFire: Fireball");
-        int projectileSpeed = 10;
+
+        SpellStats fireBallStats = new SpellStats.Builder(this.playerStats)
+            .WithProjectileSpeed(projectileSpeed)
+            .WithFlatDmg(baseDamage)
+            .WithBurningDPS(burningDPS)
+            .WithBurningDuration(burningDuration)
+            .Build();
         GameObject fireball = (GameObject)Instantiate(Resources.Load<GameObject>("Fireball"), firePoint.position, Quaternion.identity);
-        fireball.GetComponent<FlatDamage>().SetDamage(baseDamage);
-        Rigidbody2D rb = fireball.GetComponent<Rigidbody2D>();
-        rb.velocity = firePoint.up * projectileSpeed;
+        ApplySpellStatsToGameObject(fireBallStats, fireball);
     }
 
     // 50 Forge Fire Fire Fire

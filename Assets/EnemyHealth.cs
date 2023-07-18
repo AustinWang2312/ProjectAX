@@ -32,6 +32,14 @@ public class EnemyHealth : MonoBehaviour
         }
     }
 
+    public void TakeHpPercentDamage(float percent)
+    {
+        float flatDamage = percent * maxHealth;
+        TakeFlatDamage(flatDamage);
+    }
+
+
+
     public void TakeBurnDamage(float amount)
     {
         float final_amount = amount;
