@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
+
 
 public class EnemyHealth : MonoBehaviour
 {
@@ -15,6 +17,9 @@ public class EnemyHealth : MonoBehaviour
     public float burnDuration; // The duration of the burn after leaving the zone
     public float totalBurnDPS = 0; // The amount of damage to apply each second
 
+    private float burnTickRate = 0.5f;  // The time between each damage tick
+    private float burnTickCounter = 0;  // A counter to keep track of time since the last damage tick
+
     private void Start()
     {
         currentHealth = maxHealth;
@@ -25,6 +30,7 @@ public class EnemyHealth : MonoBehaviour
     {
         float final_amount = amount * (1 - Mathf.Max(0, currentArmor));
         currentHealth -= final_amount;
+        ShowDamage(final_amount);
         healthBar.UpdateHealthBar(currentHealth);
         if (currentHealth <= 0)
         {
@@ -44,12 +50,33 @@ public class EnemyHealth : MonoBehaviour
     {
         float final_amount = amount;
         currentHealth -= final_amount;
+        ShowDamage(final_amount);
         healthBar.UpdateHealthBar(currentHealth);
         if (currentHealth <= 0)
         {
             Die();
         }
     }
+
+    public void ShowDamage(float amount)
+    {
+        //// Subtract the damage from the enemy's health
+
+        //// Create a damage text object
+        //GameObject damageTextObject = DamageTextPool.Instance.Get();
+        //Vector3 offset = new Vector2(0, -1);
+        //damageTextObject.transform.position = transform.position + offset;
+
+        //// Get the TextMeshPro component and set the text to the damage dealt
+        //TextMeshPro textMesh = damageTextObject.GetComponent<TextMeshPro>();
+        //textMesh.text = amount.ToString();
+
+        //// Return the damage text to the pool after a few seconds
+        //StartCoroutine(ReturnAfterSeconds(damageTextObject, 0.2f));
+
+        DamageTextPool.Instance.ShowDamage(amount, this.transform);
+    }
+
 
     public void BreakArmor(float armor_reduction, float duration)
     {
@@ -115,10 +142,20 @@ public class EnemyHealth : MonoBehaviour
 
     private void Update()
     {
-        if(isBurning)
+        if (isBurning)
         {
-            float damageThisFrame = totalBurnDPS * Time.deltaTime;
-            TakeBurnDamage(damageThisFrame);
+            burnTickCounter += Time.deltaTime;
+
+            if (burnTickCounter >= burnTickRate)
+            {
+                // It's time for a damage tick
+                float damageThisTick = totalBurnDPS * burnTickRate;
+                TakeBurnDamage(damageThisTick);
+                ShowDamage(damageThisTick);
+
+                // Reset the tick counter
+                burnTickCounter = 0;
+            }
         }
     }
 

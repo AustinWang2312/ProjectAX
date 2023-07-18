@@ -606,7 +606,7 @@ public class OrbManager : MonoBehaviour
         float area = 100f;
         float objectDuration = 7f;
         float burningDPS = 5f;
-        float burningDuration = 3f;
+        float burningDuration = 1f;
         float slowAmount = 0.3f;
         
         SpellStats tarpitStats = new SpellStats.Builder(this.playerStats)
