@@ -351,12 +351,24 @@ public class OrbManager : MonoBehaviour
     // 9 Cast Earth Earth Earth
     private void CombinationAction_EarthEarthEarth0()
     {
-        
+        //Earth Shield
         Debug.Log("Performing action for Left Click EarthEarthEarth");
+
+        //TODO: fix area
+        float area = 100f;
+        float objectDuration = 0.1f;
         float shield_base = 40;
-        //change with modifiers later
-        float final_shield = shield_base;
-        playerHealth.SetShield(final_shield);
+
+
+
+        SpellStats shieldStats = new SpellStats.Builder(this.playerStats)
+            .WithArea(area)
+            .WithObjectDuration(objectDuration)
+            .WithShieldAmount(shield_base)
+            .Build();
+
+        GameObject shield = (GameObject)Instantiate(Resources.Load<GameObject>("EarthShield"), transform.position, Quaternion.identity);
+        ApplySpellStatsToGameObject(shieldStats, shield);
 
     }
 

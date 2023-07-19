@@ -55,8 +55,12 @@ public class PlayerHealth : MonoBehaviour
 
     public void SetShield(float shieldAmount)
     {
-        maxShield = shieldAmount;
-        currentShield = shieldAmount;
+        if (shieldAmount > currentShield)
+        {
+            maxShield = shieldAmount;
+            currentShield = shieldAmount;
+        }
+        
         healthBar.UpdateHealthBar();
 
     }
