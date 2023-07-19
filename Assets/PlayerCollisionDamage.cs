@@ -5,21 +5,6 @@ using UnityEngine;
 public class PlayerCollisionDamage : MonoBehaviour
 {
     public float baseDamage;
-    public bool takingDamage = false;
-    PlayerHealth playerHealth;
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-
-    }
 
     private void OnCollisionStay2D(Collision2D collision)
     {

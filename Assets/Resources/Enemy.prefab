@@ -89,7 +89,6 @@ GameObject:
   - component: {fileID: 902960514191495934}
   - component: {fileID: 5551296165398209634}
   - component: {fileID: 85282329033759433}
-  - component: {fileID: 7115486797674922890}
   - component: {fileID: 1690500836659128156}
   m_Layer: 0
   m_Name: Enemy
@@ -208,6 +207,7 @@ MonoBehaviour:
   defaultSpeed: 2
   currentSpeed: 0
   rb: {fileID: 902960514191495934}
+  baseDamage: 10
 --- !u!114 &85282329033759433
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -227,20 +227,6 @@ MonoBehaviour:
   currentArmor: 0.1
   burnDuration: 0
   totalBurnDPS: 0
---- !u!114 &7115486797674922890
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1064154775874011750}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 742b651fa35914435b17b3f318e7674a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  baseDamage: 10
-  takingDamage: 0
 --- !u!58 &1690500836659128156
 CircleCollider2D:
   m_ObjectHideFlags: 0
