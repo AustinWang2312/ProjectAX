@@ -96,7 +96,7 @@ GameObject:
   - component: {fileID: 3620627895094523011}
   - component: {fileID: 4789995553181672023}
   - component: {fileID: 5453750845225138326}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Pylon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
