@@ -59,6 +59,24 @@ public class Pylon : MonoBehaviour
         isHovering = false;
     }
 
+    void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.gameObject.CompareTag("Cursor"))
+        {
+            rend.material.color = Color.red;
+            isHovering = true;
+        }
+    }
+
+    void OnTriggerExit2D(Collider2D other)
+    {
+        if (other.gameObject.CompareTag("Cursor"))
+        {
+            rend.material.color = Color.white;
+            isHovering = false;
+        }
+    }
+
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.Space) && isHovering && hasOrb)

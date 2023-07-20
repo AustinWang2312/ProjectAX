@@ -27,16 +27,29 @@ public class SpellStats
     public float SlowDuration { get; set; }
     public float StunDuration { get; set; }
 
+    public SpellStats()
+    {
+
+    }
+
+    public SpellStats(SpellStats source)
+    {
+        foreach (var property in typeof(SpellStats).GetProperties())
+        {
+            if (property.PropertyType == typeof(float))
+            {
+                property.SetValue(this, property.GetValue(source));
+            }
+        }
+    }
 
     public class Builder
     {
         private SpellStats _spellStats;
-        private PlayerStats _playerStats;
 
-        public Builder(PlayerStats playerStats)
+        public Builder()
         {
             _spellStats = new SpellStats();
-            _playerStats = playerStats;
         }
 
         public Builder WithArea(float area)
@@ -167,20 +180,30 @@ public class SpellStats
 
         public SpellStats Build()
         {
-
-            // Use reflection to apply player's multipliers
-            foreach (var property in typeof(SpellStats).GetProperties())
-            {
-                if (property.PropertyType == typeof(float))
-                {
-                    float spellStatValue = (float)property.GetValue(_spellStats);
-                    float playerStatMultiplier = (float)typeof(PlayerStats).GetProperty(property.Name).GetValue(_playerStats);
-                    property.SetValue(_spellStats, spellStatValue * playerStatMultiplier);
-                }
-            }
-
             return _spellStats;
         }
-    }
+
         
+    }
+
+    public SpellStats ApplyPlayerStats(PlayerStats playerStats)
+    {
+
+        SpellStats copy = new SpellStats();
+
+        // Use reflection to apply player's multipliers
+        foreach (var property in typeof(SpellStats).GetProperties())
+        {
+            if (property.PropertyType == typeof(float))
+            {
+                float spellStatValue = (float)property.GetValue(this);
+                float playerStatMultiplier = (float)typeof(PlayerStats).GetProperty(property.Name).GetValue(playerStats);
+                property.SetValue(copy, spellStatValue * playerStatMultiplier);
+            }
+        }
+
+        return copy;
+    }
+
+
 }

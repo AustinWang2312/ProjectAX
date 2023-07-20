@@ -274,26 +274,7 @@ public class OrbManager : MonoBehaviour
         pylon.GetComponent<Pylon>().SetOrbType(orbType, onSprite, offSprite);
     }
 
-    private void ApplySpellStatsToGameObject(SpellStats spellStats, GameObject gameObject)
-    {
-
-        //Set Velocity
-        Rigidbody2D rb = gameObject.GetComponent<Rigidbody2D>();
-        Projectile projectile = gameObject.GetComponent<Projectile>();
-        if(rb != null && projectile != null)
-        {
-            rb.velocity = firePoint.up * spellStats.ProjectileSpeed;
-        }
-        
-
-
-
-        var spellComponents = gameObject.GetComponents<ISpellComponent>();
-        foreach (var component in spellComponents)
-        {
-            component.ApplyStats(spellStats);
-        }
-    }
+    
 
 
     // 1 Cast Earth Water Fire
@@ -354,21 +335,8 @@ public class OrbManager : MonoBehaviour
         //Earth Shield
         Debug.Log("Performing action for Left Click EarthEarthEarth");
 
-        //TODO: fix area
-        float area = 100f;
-        float objectDuration = 0.1f;
-        float shield_base = 40;
-
-
-
-        SpellStats shieldStats = new SpellStats.Builder(this.playerStats)
-            .WithArea(area)
-            .WithObjectDuration(objectDuration)
-            .WithShieldAmount(shield_base)
-            .Build();
-
-        GameObject shield = (GameObject)Instantiate(Resources.Load<GameObject>("EarthShield"), transform.position, Quaternion.identity);
-        ApplySpellStatsToGameObject(shieldStats, shield);
+        EarthShield earthshield = new EarthShield();
+        earthshield.Cast(this);
 
     }
 
@@ -468,22 +436,8 @@ public class OrbManager : MonoBehaviour
         //Geyser
         Debug.Log("Performing action for Left Click WaterEarthWater");
 
-        //add modifiers later
-        //TODO: fix area
-        float area = 100f;
-        float objectDuration = 0.2f;
-        float knockbackForce = 25f;
-        float hpPercentDmg = 0.1f;
-
-        SpellStats geyserStats = new SpellStats.Builder(this.playerStats)
-            .WithArea(area)
-            .WithKnockbackForce(knockbackForce)
-            .WithObjectDuration(objectDuration)
-            .WithHpPercentDmg(hpPercentDmg)
-            .Build();
-
-        GameObject geyser = (GameObject)Instantiate(Resources.Load<GameObject>("Geyser"), cursorPoint.position, Quaternion.identity);
-        ApplySpellStatsToGameObject(geyserStats, geyser);
+        Geyser geyser = new Geyser();
+        geyser.Cast(this);
     }
 
     // 24 Forge Water Earth Water
@@ -559,25 +513,9 @@ public class OrbManager : MonoBehaviour
     private void CombinationAction_WaterFireWater0()
     {
         Debug.Log("Performing action for Left Click WaterFireWater");
-        
-        float baseDamage = 25f;
-        float projectileSpeed = 15f;
-        float baseStun = 2f;
-        float baseBreak = 0.1f;
-        float baseBreakDuration = 10f;
 
-        ////modifiers are applied in the builder function
-
-        SpellStats icicleStats = new SpellStats.Builder(this.playerStats)
-            .WithProjectileSpeed(projectileSpeed)
-            .WithFlatDmg(baseDamage)
-            .WithStunDuration(baseStun)
-            .WithBreakArmorAmount(baseBreak)
-            .WithBreakDuration(baseBreakDuration)
-            .Build();
-
-        GameObject icicle = (GameObject)Instantiate(Resources.Load<GameObject>("Icicle"), firePoint.position, transform.rotation);
-        ApplySpellStatsToGameObject(icicleStats, icicle);
+        Icicle icicle = new Icicle();
+        icicle.Cast(this);
     }
 
     // 36 Forge Water Fire Water
@@ -631,24 +569,8 @@ public class OrbManager : MonoBehaviour
         //Tar pit
         Debug.Log("Performing action for Left Click FireEarthEarth");
 
-        //add modifiers later
-        //TODO: fix area
-        float area = 100f;
-        float objectDuration = 7f;
-        float burningDPS = 5f;
-        float burningDuration = 1f;
-        float slowAmount = 0.3f;
-        
-        SpellStats tarpitStats = new SpellStats.Builder(this.playerStats)
-            .WithArea(area)
-            .WithBurningDPS(burningDPS)
-            .WithBurningDuration(burningDuration)
-            .WithObjectDuration(objectDuration)
-            .WithSlowAmount(slowAmount)
-            .Build();
-
-        GameObject tarpit = (GameObject)Instantiate(Resources.Load<GameObject>("Tarpit"), cursorPoint.position, Quaternion.identity);
-        ApplySpellStatsToGameObject(tarpitStats, tarpit);
+        Tarpit tarpit = new Tarpit();
+        tarpit.Cast(this);
     }
 
     // 44 Forge Fire Earth Earth
@@ -684,21 +606,13 @@ public class OrbManager : MonoBehaviour
     // 49 Cast Fire Fire Fire
     private void CombinationAction_FireFireFire0()
     {
+        //Fireball
         //add modifiers later
-        float baseDamage = 100f;
-        float projectileSpeed = 10f;
-        float burningDPS = 20f;
-        float burningDuration = 3f;
+        
         Debug.Log("Performing action for Left Click FireFireFire: Fireball");
 
-        SpellStats fireBallStats = new SpellStats.Builder(this.playerStats)
-            .WithProjectileSpeed(projectileSpeed)
-            .WithFlatDmg(baseDamage)
-            .WithBurningDPS(burningDPS)
-            .WithBurningDuration(burningDuration)
-            .Build();
-        GameObject fireball = (GameObject)Instantiate(Resources.Load<GameObject>("Fireball"), firePoint.position, Quaternion.identity);
-        ApplySpellStatsToGameObject(fireBallStats, fireball);
+        Fireball fireball = new Fireball();
+        fireball.Cast(this);
     }
 
     // 50 Forge Fire Fire Fire
