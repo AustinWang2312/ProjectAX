@@ -54,7 +54,7 @@ public class EarthShield : Spell
     {
         // Initial values for this specific spell
         float area = 1f;
-        float objectDuration = 0.1f;
+        float objectDuration = 0.01f;
         float shield_base = 40;
 
         stats = new SpellStats.Builder()
@@ -82,7 +82,7 @@ public class Geyser : Spell
     {
         // Initial values for this specific spell
         float area = 1f;
-        float objectDuration = 0.2f;
+        float objectDuration = 0.01f;
         float knockbackForce = 25f;
         float hpPercentDmg = 0.1f;
 

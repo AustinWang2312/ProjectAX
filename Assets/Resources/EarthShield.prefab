@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 2218303581118879501}
   - component: {fileID: 2551773275557205652}
   - component: {fileID: 6283787606054792426}
+  - component: {fileID: 1458469347193922374}
   m_Layer: 0
   m_Name: EarthShield
   m_TagString: Untagged
@@ -34,7 +35,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 37
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &6947638589910610463
 SpriteRenderer:
@@ -76,9 +77,9 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 1
   m_Sprite: {fileID: 21300000, guid: f996977ae71da4a3d83905a307a0b789, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 0.7529412}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -163,6 +164,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   duration: 0.1
+  animator: {fileID: 1458469347193922374}
 --- !u!114 &6283787606054792426
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -176,3 +178,24 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   shieldAmount: 20
+--- !u!95 &1458469347193922374
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3086910346985657816}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: e05c0127d836743599881e28ad55ebe0, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0

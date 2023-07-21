@@ -37,20 +37,12 @@ public class PlayerController : MonoBehaviour
     private void FixedUpdate()
     {
 
-        // Get input for movement
-        float moveX = Input.GetAxisRaw("Horizontal");
-        float moveY = Input.GetAxisRaw("Vertical");
-
-        // Calculate movement vector
-        moveDirection = new Vector2(moveX, moveY).normalized;
-
-        // Apply movement
-        rb.MovePosition(rb.position + moveDirection * currentSpeed * Time.fixedDeltaTime);
-
         // Update camera position smoothly
         Vector3 desiredCameraPosition = transform.position + cameraOffset;
         Vector3 smoothedCameraPosition = Vector3.Lerp(mainCameraTransform.position, desiredCameraPosition, smoothSpeed);
         mainCameraTransform.position = smoothedCameraPosition;
+
+
 
 
 
@@ -66,8 +58,20 @@ public class PlayerController : MonoBehaviour
         
         transform.up = lookDirection;
 
+        // Get input for movement
+        float moveX = Input.GetAxisRaw("Horizontal");
+        float moveY = Input.GetAxisRaw("Vertical");
+
+        // Calculate movement vector
+        moveDirection = new Vector2(moveX, moveY).normalized;
+
+        // Apply movement
+        rb.MovePosition(rb.position + moveDirection * currentSpeed * Time.fixedDeltaTime);
 
         
+
+
+
 
     }
 
