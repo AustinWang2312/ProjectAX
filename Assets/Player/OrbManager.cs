@@ -67,18 +67,13 @@ public class OrbManager : MonoBehaviour
         {
             primaryOrbs[i] = OrbType.Empty;
         }
-        primaryOrbs[0] = OrbType.Earth;
-        primaryOrbs[1] = OrbType.Earth;
-        primaryOrbs[2] = OrbType.Earth;
+        
 
         for (int i = 0; i < secondaryOrbs.Length; i++)
         {
             secondaryOrbs[i] = OrbType.Empty;
         }
-        secondaryOrbs[0] = OrbType.Fire;
-        secondaryOrbs[1] = OrbType.Fire;
-        secondaryOrbs[2] = OrbType.Fire;
-        
+       
         
         currentOrbs = primaryOrbs;
         backupOrbs = secondaryOrbs;
@@ -319,14 +314,19 @@ public class OrbManager : MonoBehaviour
     // 7 Cast Earth Earth Fire
     private void CombinationAction_EarthEarthFire0()
     {
-        
+        //Boulder
         Debug.Log("Performing action for Left Click EarthEarthFire");
+        Boulder boulder = new Boulder();
+        boulder.Cast(this);
+
+
     }
 
     // 8 Forge Earth Earth Fire
     private void CombinationAction_EarthEarthFire1()
     {
         Debug.Log("Performing action for Right Click EarthEarthFire");
+        
     }
 
     // 9 Cast Earth Earth Earth

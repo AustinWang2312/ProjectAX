@@ -196,4 +196,41 @@ public class Fireball : Spell
 
 }
 
+public class Boulder : Spell
+{
+    public Boulder()
+    {
+        // Initial values for this specific spell
+        float baseHPPercentDamage = 0.25f;
+        float projectileSpeed = 10f;
+        float slowAmount = 0.4f;
+        float slowDuration = 3.0f;
+        float weakenAmount = 0.5f;
+        float weakenDuration = 10.0f;
+        float stunDuration = 0.5f;
+
+        stats = new SpellStats.Builder()
+            .WithProjectileSpeed(projectileSpeed)
+            .WithHpPercentDmg(baseHPPercentDamage)
+            .WithSlowAmount(slowAmount)
+            .WithSlowDuration(slowDuration)
+            .WithWeakenAmount(weakenAmount)
+            .WithWeakenDuration(weakenDuration)
+            .WithStunDuration(stunDuration)
+            .Build();
+    }
+
+    public override void Cast(OrbManager player)
+    {
+        PlayerStats playerStats = player.playerStats;
+        GameObject boulder = (GameObject)GameObject.Instantiate(Resources.Load<GameObject>("Boulder"), player.firePoint.position, Quaternion.identity);
+        SpellStats finalStats = stats.ApplyPlayerStats(playerStats);
+
+        ApplySpellStatsToGameObject(finalStats, boulder, player);
+    }
+
+}
+
+
+
 
