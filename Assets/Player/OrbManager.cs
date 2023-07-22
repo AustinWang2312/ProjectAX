@@ -367,7 +367,7 @@ public class OrbManager : MonoBehaviour
         
     }
 
-    // 13 Cast Earth Fire Earth
+    // 13 Cast Earth Water Earth
     private void CombinationAction_EarthWaterEarth0()
     {
         
@@ -393,14 +393,16 @@ public class OrbManager : MonoBehaviour
         Debug.Log("Performing action for Right Click EarthWaterWater");
     }
 
-    // 17 Cast Earth Water Water
+    // 17 Cast Earth Fire Fire
     private void CombinationAction_EarthFireFire0()
     {
         
         Debug.Log("Performing action for Left Click EarthFireFire");
+        Flamebreath flamebreath = new Flamebreath();
+        flamebreath.Cast(this);
     }
 
-    // 18 Forge Earth Water Water
+    // 18 Forge Earth Fire Fire
     private void CombinationAction_EarthFireFire1()
     {
         Debug.Log("Performing action for Right Click EarthWFireFire");
@@ -450,6 +452,8 @@ public class OrbManager : MonoBehaviour
     private void CombinationAction_WaterFireFire0()
     {
         Debug.Log("Performing action for Left Click WaterFireFire");
+        GreekFire greekFire = new GreekFire();
+        greekFire.Cast(this);
     }
 
     // 26 Forge Water Fire Fire

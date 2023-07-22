@@ -19,7 +19,7 @@ public abstract class Spell
         Debug.Log("test");
     }
 
-    protected void ApplySpellStatsToGameObject(SpellStats spellStats, GameObject gameObject, OrbManager player)
+    public void ApplySpellStatsToGameObject(SpellStats spellStats, GameObject gameObject, OrbManager player)
     {
 
         //Set Velocity
@@ -112,8 +112,8 @@ public class Icicle : Spell
         // Initial values for this specific spell
         float baseDamage = 25f;
         float projectileSpeed = 15f;
-        float baseStun = 2f;
-        float baseBreak = 0.1f;
+        float baseStun = 3f;
+        float baseBreak = 0.25f;
         float baseBreakDuration = 10f;
 
         stats = new SpellStats.Builder()
@@ -203,7 +203,7 @@ public class Boulder : Spell
         // Initial values for this specific spell
         float baseHPPercentDamage = 0.25f;
         float projectileSpeed = 10f;
-        float slowAmount = 0.4f;
+        float slowAmount = 0.8f;
         float slowDuration = 3.0f;
         float weakenAmount = 0.5f;
         float weakenDuration = 10.0f;
@@ -227,6 +227,136 @@ public class Boulder : Spell
         SpellStats finalStats = stats.ApplyPlayerStats(playerStats);
 
         ApplySpellStatsToGameObject(finalStats, boulder, player);
+    }
+
+}
+
+public class Flamebreath : Spell
+{
+    public Flamebreath()
+    {
+        // Initial values for this specific spell
+        float area = 1f;
+        float baseDamage = 25f;
+        float slowAmount = 0.9f;
+        float weakenAmount = 0.4f;
+        float weakenDuration = 4.0f;
+        float breakAmount = 0.1f;
+        float breakDuration = 6.0f;
+        float burningDps = 4f;
+        float burningDuration = 2.0f;
+        float objectDuration = 0.4f;
+
+        stats = new SpellStats.Builder()
+            .WithArea(area)
+            .WithFlatDmg(baseDamage)
+            .WithSlowAmount(slowAmount)
+            .WithWeakenAmount(weakenAmount)
+            .WithWeakenDuration(weakenDuration)
+            .WithBreakArmorAmount(breakAmount)
+            .WithBreakDuration(breakDuration)
+            .WithBurningDPS(burningDps)
+            .WithBurningDuration(burningDuration)
+            .WithObjectDuration(objectDuration)
+            .Build();
+    }
+
+    public override void Cast(OrbManager player)
+    {
+        PlayerStats playerStats = player.playerStats;
+        Vector2 offset = player.firePoint.up * 1;
+        Vector3 newPosition = player.firePoint.position + new Vector3(offset.x, offset.y, 0);
+        GameObject flameBreath = (GameObject)GameObject.Instantiate(Resources.Load<GameObject>("FlameBreath"), newPosition, player.transform.rotation);
+        SpellStats finalStats = stats.ApplyPlayerStats(playerStats);
+
+        ApplySpellStatsToGameObject(finalStats, flameBreath, player);
+    }
+
+}
+
+public class GreekFire : Spell
+{
+    public GreekFire()
+    {
+        // Initial values for this specific spell
+        float area = 1f;
+        float breakAmount = 0.1f;
+        float breakDuration = 10.0f;
+        float burningDps = 5f;
+        float burningDuration = 10.0f;
+        float objectDuration = 0.1f;
+
+        stats = new SpellStats.Builder()
+            .WithArea(area)
+            .WithBreakArmorAmount(breakAmount)
+            .WithBreakDuration(breakDuration)
+            .WithBurningDPS(burningDps)
+            .WithBurningDuration(burningDuration)
+            .WithObjectDuration(objectDuration)
+            .Build();
+    }
+
+    public override void Cast(OrbManager player)
+    {
+        PlayerStats playerStats = player.playerStats;
+        Vector3 spellLocation = player.cursorPoint.position;
+        GameObject indicator = (GameObject)GameObject.Instantiate(Resources.Load<GameObject>("greekFireIndicator"), spellLocation, Quaternion.identity);
+
+        DelegatedGreekFireSpawner.Instance.WaitAndExplode(1f, indicator, playerStats, player, spellLocation, stats);
+        
+    }
+
+    private IEnumerator WaitFor(float duration)
+    {
+        yield return new WaitForSeconds(duration);
+    }
+
+
+}
+
+public class DelegatedGreekFireSpawner: MonoBehaviour
+{
+    public static DelegatedGreekFireSpawner Instance { get; private set; }
+
+    private void Awake()
+    {
+        if (Instance == null)
+        {
+            Instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
+
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
+    private static void InitializeSingleton()
+    {
+        if (Instance == null)
+        {
+            GameObject singletonObject = new GameObject(nameof(DelegatedGreekFireSpawner));
+            singletonObject.AddComponent<DelegatedGreekFireSpawner>();
+        }
+    }
+
+    public void WaitAndExplode(float duration, GameObject indicator, PlayerStats playerStats, OrbManager player, Vector3 spellLocation, SpellStats spellStats)
+    {
+        StartCoroutine(WaitFor(duration, indicator, playerStats, player, spellLocation, spellStats));
+    }
+
+    private IEnumerator WaitFor(float duration, GameObject indicator, PlayerStats playerStats, OrbManager player, Vector3 spellLocation, SpellStats spellStats)
+    {
+        yield return new WaitForSeconds(duration);
+        Destroy(indicator);
+        GameObject greekFire = (GameObject)GameObject.Instantiate(Resources.Load<GameObject>("GreekFire"), spellLocation, Quaternion.identity);
+        SpellStats finalStats = spellStats.ApplyPlayerStats(playerStats);
+
+        GreekFire spell = new GreekFire();
+        spell.ApplySpellStatsToGameObject(finalStats, greekFire, player);
+
+
     }
 
 }
