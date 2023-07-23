@@ -2,9 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
 public abstract class Spell
 {
     protected SpellStats stats;
+    protected List<OrbManager.OrbType> combo;
 
     public Spell()
     {
@@ -12,6 +14,11 @@ public abstract class Spell
 
     // An abstract method that must be implemented by subclasses.
     public abstract void Cast(OrbManager player);
+
+    public List<OrbManager.OrbType> GetComboString()
+    {
+        return combo;
+    }
 
     // A non-abstract method that already has an implementation.
     public void DefaultMethod()
@@ -47,11 +54,27 @@ public abstract class Spell
     }
 }
 
+public class BaseSpell: Spell
+{
+    //For DelegatedSpawner
+    public override void Cast(OrbManager player)
+    {
+        PlayerStats playerStats = player.playerStats;
+        GameObject shield = (GameObject)GameObject.Instantiate(Resources.Load<GameObject>("EarthShield"), player.transform.position, Quaternion.identity);
+        SpellStats finalStats = stats.ApplyPlayerStats(playerStats);
+
+        ApplySpellStatsToGameObject(finalStats, shield, player);
+    }
+
+}
+
 
 public class EarthShield : Spell
 {
     public EarthShield()
     {
+        combo = new List<OrbManager.OrbType> { OrbManager.OrbType.Earth, OrbManager.OrbType.Earth, OrbManager.OrbType.Earth };
+
         // Initial values for this specific spell
         float area = 1f;
         float objectDuration = 0.01f;
@@ -80,6 +103,9 @@ public class Geyser : Spell
 {
     public Geyser()
     {
+        combo = new List<OrbManager.OrbType> { OrbManager.OrbType.Water, OrbManager.OrbType.Earth, OrbManager.OrbType.Water };
+
+
         // Initial values for this specific spell
         float area = 1f;
         float objectDuration = 0.01f;
@@ -109,6 +135,9 @@ public class Icicle : Spell
 {
     public Icicle()
     {
+        combo = new List<OrbManager.OrbType> { OrbManager.OrbType.Water, OrbManager.OrbType.Fire, OrbManager.OrbType.Water };
+
+
         // Initial values for this specific spell
         float baseDamage = 25f;
         float projectileSpeed = 15f;
@@ -140,6 +169,9 @@ public class Tarpit : Spell
 {
     public Tarpit()
     {
+        combo = new List<OrbManager.OrbType> { OrbManager.OrbType.Fire, OrbManager.OrbType.Earth, OrbManager.OrbType.Earth };
+
+
         // Initial values for this specific spell
         float area = 1f;
         float objectDuration = 7f;
@@ -171,6 +203,9 @@ public class Fireball : Spell
 {
     public Fireball()
     {
+        combo = new List<OrbManager.OrbType> { OrbManager.OrbType.Fire, OrbManager.OrbType.Fire, OrbManager.OrbType.Fire };
+
+
         // Initial values for this specific spell
         float baseDamage = 100f;
         float projectileSpeed = 10f;
@@ -200,6 +235,9 @@ public class Boulder : Spell
 {
     public Boulder()
     {
+        combo = new List<OrbManager.OrbType> { OrbManager.OrbType.Earth, OrbManager.OrbType.Earth, OrbManager.OrbType.Fire };
+
+
         // Initial values for this specific spell
         float baseHPPercentDamage = 0.25f;
         float projectileSpeed = 10f;
@@ -235,6 +273,10 @@ public class Flamebreath : Spell
 {
     public Flamebreath()
     {
+        combo = new List<OrbManager.OrbType> { OrbManager.OrbType.Earth, OrbManager.OrbType.Fire, OrbManager.OrbType.Fire };
+
+
+
         // Initial values for this specific spell
         float area = 1f;
         float baseDamage = 25f;
@@ -278,6 +320,9 @@ public class GreekFire : Spell
 {
     public GreekFire()
     {
+        combo = new List<OrbManager.OrbType> { OrbManager.OrbType.Water, OrbManager.OrbType.Fire, OrbManager.OrbType.Fire };
+
+
         // Initial values for this specific spell
         float area = 1f;
         float breakAmount = 0.1f;
@@ -302,21 +347,49 @@ public class GreekFire : Spell
         Vector3 spellLocation = player.cursorPoint.position;
         GameObject indicator = (GameObject)GameObject.Instantiate(Resources.Load<GameObject>("greekFireIndicator"), spellLocation, Quaternion.identity);
 
-        DelegatedGreekFireSpawner.Instance.WaitAndExplode(1f, indicator, playerStats, player, spellLocation, stats);
+        DelegatedSpawner.Instance.WaitAndTrigger("GreekFire", 1f, indicator, playerStats, player, spellLocation, stats);
         
     }
+}
 
-    private IEnumerator WaitFor(float duration)
+public class Sunstrike : Spell
+{
+    public Sunstrike()
     {
-        yield return new WaitForSeconds(duration);
+        combo = new List<OrbManager.OrbType> { OrbManager.OrbType.Fire, OrbManager.OrbType.Earth, OrbManager.OrbType.Fire };
+
+
+        // Initial values for this specific spell
+        float area = 1f;
+        float objectDuration = 0.1f;
+        float flatDamage = 250f;
+
+        stats = new SpellStats.Builder()
+            .WithArea(area)
+            .WithFlatDmg(flatDamage)
+            .WithObjectDuration(objectDuration)
+            .Build();
+    }
+
+    public override void Cast(OrbManager player)
+    {
+        PlayerStats playerStats = player.playerStats;
+        Vector3 spellLocation = player.cursorPoint.position;
+        GameObject indicator = (GameObject)GameObject.Instantiate(Resources.Load<GameObject>("sunstrikeIndicator"), spellLocation, Quaternion.identity);
+
+        DelegatedSpawner.Instance.WaitAndTrigger("Sunstrike", 2f, indicator, playerStats, player, spellLocation, stats);
+
     }
 
 
 }
 
-public class DelegatedGreekFireSpawner: MonoBehaviour
+
+
+//Helper Class for Delayed Instantiation (Any spells that require coroutines
+public class DelegatedSpawner: MonoBehaviour
 {
-    public static DelegatedGreekFireSpawner Instance { get; private set; }
+    public static DelegatedSpawner Instance { get; private set; }
 
     private void Awake()
     {
@@ -336,24 +409,24 @@ public class DelegatedGreekFireSpawner: MonoBehaviour
     {
         if (Instance == null)
         {
-            GameObject singletonObject = new GameObject(nameof(DelegatedGreekFireSpawner));
-            singletonObject.AddComponent<DelegatedGreekFireSpawner>();
+            GameObject singletonObject = new GameObject(nameof(DelegatedSpawner));
+            singletonObject.AddComponent<DelegatedSpawner>();
         }
     }
 
-    public void WaitAndExplode(float duration, GameObject indicator, PlayerStats playerStats, OrbManager player, Vector3 spellLocation, SpellStats spellStats)
+    public void WaitAndTrigger(string spellName, float duration, GameObject indicator, PlayerStats playerStats, OrbManager player, Vector3 spellLocation, SpellStats spellStats)
     {
-        StartCoroutine(WaitFor(duration, indicator, playerStats, player, spellLocation, spellStats));
+        StartCoroutine(WaitFor(spellName, duration, indicator, playerStats, player, spellLocation, spellStats));
     }
 
-    private IEnumerator WaitFor(float duration, GameObject indicator, PlayerStats playerStats, OrbManager player, Vector3 spellLocation, SpellStats spellStats)
+    private IEnumerator WaitFor(string spellName, float duration, GameObject indicator, PlayerStats playerStats, OrbManager player, Vector3 spellLocation, SpellStats spellStats)
     {
         yield return new WaitForSeconds(duration);
         Destroy(indicator);
-        GameObject greekFire = (GameObject)GameObject.Instantiate(Resources.Load<GameObject>("GreekFire"), spellLocation, Quaternion.identity);
+        GameObject greekFire = (GameObject)GameObject.Instantiate(Resources.Load<GameObject>(spellName), spellLocation, Quaternion.identity);
         SpellStats finalStats = spellStats.ApplyPlayerStats(playerStats);
 
-        GreekFire spell = new GreekFire();
+        Spell spell = new BaseSpell();
         spell.ApplySpellStatsToGameObject(finalStats, greekFire, player);
 
 

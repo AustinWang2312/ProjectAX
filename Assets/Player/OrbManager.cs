@@ -559,6 +559,8 @@ public class OrbManager : MonoBehaviour
     private void CombinationAction_FireEarthFire0()
     {
         Debug.Log("Performing action for Left Click FireEarthFire");
+        Sunstrike sunstrike = new Sunstrike();
+        sunstrike.Cast(this);
     }
 
     // 42 Forge Fire Earth Fire
