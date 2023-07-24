@@ -2,6 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using System.Linq;
+using TMPro;
+
 
 
 public class OrbManager : MonoBehaviour
@@ -49,9 +52,33 @@ public class OrbManager : MonoBehaviour
         Empty
     }
 
-    
+    //Temporarily hardcoded, spells should be unlocked over time
+    //Represents current spellbook of player
+    public List<Spell> allSpells = new List<Spell>() // list to store all spells
+    {
+        new Fireball(),
+        new EarthShield(),
+        new Geyser(),
+        new Icicle(),
+        new Tarpit(),
+        new Boulder(),
+        new Flamebreath(),
+        new GreekFire(),
+        new Sunstrike()
+    };
 
-    
+    [System.Serializable]
+    public class OrbImageSet
+    {
+        public Image[] orbImages;
+    }
+
+    public List<Spell> currentPossibleSpells;
+
+    public OrbImageSet[] orbImageSets;
+    public TextMeshProUGUI[] spellNames;
+
+
 
     // Start is called before the first frame update
     void Start()
@@ -78,7 +105,7 @@ public class OrbManager : MonoBehaviour
         currentOrbs = primaryOrbs;
         backupOrbs = secondaryOrbs;
 
-
+        
 
         //Initialize Combination hash map
         combinationActions = new Dictionary<string, System.Action>();
@@ -101,8 +128,11 @@ public class OrbManager : MonoBehaviour
     }
 
         UpdateOrbHUD();
-        
+        currentPossibleSpells = GetPossibleSpells();
+        UpdateSpellUI();
     }
+
+
 
     public int getNumOrbs()
     {
@@ -176,6 +206,8 @@ public class OrbManager : MonoBehaviour
                 }
 
                 UpdateOrbHUD();
+                currentPossibleSpells = GetPossibleSpells();
+                UpdateSpellUI();
             }
         }
 
@@ -190,25 +222,117 @@ public class OrbManager : MonoBehaviour
 
             // Update the orb HUD
             UpdateOrbHUD();
+            currentPossibleSpells = GetPossibleSpells();
+            UpdateSpellUI();
         }
-
-
-        
     }
 
+    public List<Spell> GetPossibleSpells()
+    {
+        return allSpells.Where(spell => IsPrefixOf(currentOrbs, spell.GetComboString())).ToList();
+    }
+
+    private bool CanFormAnySpell()
+    {
+        return allSpells.Any(spell => IsPrefixOf(currentOrbs, spell.GetComboString()));
+    }
+
+    private bool IsPrefixOf(OrbType [] prefix, List<OrbManager.OrbType> list)
+    {
+        int prefixLen = getNumOrbs();
+        for (int i = 0; i < prefixLen; i++)
+        {
+            if (prefix[i] != list[i])
+            {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private void UpdateSpellUI()
+    {
+        // Hide all spell UI elements to start
+        for (int i = 0; i < allSpells.Count; i++)
+        {
+            //spellNames[i]
+            spellNames[i].text = "";
+            foreach (var orbImage in orbImageSets[i].orbImages)
+            {
+                orbImage.color = new Color(1f, 1f, 1f, 0f); // transparent
+            }
+        }
+
+        // Display only possible spells
+        for (int i = 0; i < currentPossibleSpells.Count; i++)
+        {
+
+            // Display the description
+            spellNames[i].text = currentPossibleSpells[i].getName();
+
+
+            // Also make the orb sequence visible
+
+            for (int j = 0; j < 3; j++)
+            {
+                switch (currentPossibleSpells[i].GetComboString()[j])
+                {
+                    case OrbType.Empty:
+                        orbImageSets[i].orbImages[j].sprite = emptyOrb;
+                        orbImageSets[i].orbImages[j].color = Color.white;
+                        break;
+
+                    case OrbType.Earth:
+                        orbImageSets[i].orbImages[j].sprite = earthOrb;
+                        orbImageSets[i].orbImages[j].color = Color.white;
+                        break;
+
+                    case OrbType.Water:
+                        orbImageSets[i].orbImages[j].sprite = waterOrb;
+                        orbImageSets[i].orbImages[j].color = Color.white;
+                        break;
+
+                    case OrbType.Fire:
+                        orbImageSets[i].orbImages[j].sprite = fireOrb;
+                        orbImageSets[i].orbImages[j].color = Color.white;
+                        break;
+                }
+            }
+
+            
+        }
+    }
 
 
 
     public bool AddOrb(OrbType type)
     {
+        // Count the current orbs.
         int numOrbs = getNumOrbs();
-        if (numOrbs < currentOrbs.Length) {
-            currentOrbs[numOrbs] = type;
+
+        // Check if there's room for another orb.
+        if (numOrbs >= currentOrbs.Length)
+        {
+            // If not, return false immediately.
+            return false;
+        }
+
+        // Temporarily add the new orb.
+        currentOrbs[numOrbs] = type;
+
+        // Check if the updated currentOrbs can form any spell.
+        if (CanFormAnySpell())
+        {
+            // If so, update the HUD and return true.
             UpdateOrbHUD();
+            currentPossibleSpells = GetPossibleSpells();
+            UpdateSpellUI();
             return true;
         }
         else
         {
+            // If not, remove the new orb and return false.
+            currentOrbs[numOrbs] = OrbType.Empty;
             return false;
         }
 

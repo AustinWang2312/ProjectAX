@@ -7,6 +7,7 @@ public abstract class Spell
 {
     protected SpellStats stats;
     protected List<OrbManager.OrbType> combo;
+    protected string spellName;
 
     public Spell()
     {
@@ -20,11 +21,12 @@ public abstract class Spell
         return combo;
     }
 
-    // A non-abstract method that already has an implementation.
-    public void DefaultMethod()
+    public string getName()
     {
-        Debug.Log("test");
+        return spellName;
     }
+
+    
 
     public void ApplySpellStatsToGameObject(SpellStats spellStats, GameObject gameObject, OrbManager player)
     {
@@ -75,6 +77,8 @@ public class EarthShield : Spell
     {
         combo = new List<OrbManager.OrbType> { OrbManager.OrbType.Earth, OrbManager.OrbType.Earth, OrbManager.OrbType.Earth };
 
+        spellName = "Earth Shield";
+
         // Initial values for this specific spell
         float area = 1f;
         float objectDuration = 0.01f;
@@ -105,6 +109,7 @@ public class Geyser : Spell
     {
         combo = new List<OrbManager.OrbType> { OrbManager.OrbType.Water, OrbManager.OrbType.Earth, OrbManager.OrbType.Water };
 
+        spellName = "Geyser";
 
         // Initial values for this specific spell
         float area = 1f;
@@ -137,6 +142,7 @@ public class Icicle : Spell
     {
         combo = new List<OrbManager.OrbType> { OrbManager.OrbType.Water, OrbManager.OrbType.Fire, OrbManager.OrbType.Water };
 
+        spellName = "Icicle";
 
         // Initial values for this specific spell
         float baseDamage = 25f;
@@ -171,6 +177,7 @@ public class Tarpit : Spell
     {
         combo = new List<OrbManager.OrbType> { OrbManager.OrbType.Fire, OrbManager.OrbType.Earth, OrbManager.OrbType.Earth };
 
+        spellName = "Tarpit";
 
         // Initial values for this specific spell
         float area = 1f;
@@ -205,7 +212,7 @@ public class Fireball : Spell
     {
         combo = new List<OrbManager.OrbType> { OrbManager.OrbType.Fire, OrbManager.OrbType.Fire, OrbManager.OrbType.Fire };
 
-
+        spellName = "Fireball";
         // Initial values for this specific spell
         float baseDamage = 100f;
         float projectileSpeed = 10f;
@@ -237,6 +244,7 @@ public class Boulder : Spell
     {
         combo = new List<OrbManager.OrbType> { OrbManager.OrbType.Earth, OrbManager.OrbType.Earth, OrbManager.OrbType.Fire };
 
+        spellName = "Boulder";
 
         // Initial values for this specific spell
         float baseHPPercentDamage = 0.25f;
@@ -275,7 +283,7 @@ public class Flamebreath : Spell
     {
         combo = new List<OrbManager.OrbType> { OrbManager.OrbType.Earth, OrbManager.OrbType.Fire, OrbManager.OrbType.Fire };
 
-
+        spellName = "Flame Breath";
 
         // Initial values for this specific spell
         float area = 1f;
@@ -322,6 +330,7 @@ public class GreekFire : Spell
     {
         combo = new List<OrbManager.OrbType> { OrbManager.OrbType.Water, OrbManager.OrbType.Fire, OrbManager.OrbType.Fire };
 
+        spellName = "Greek Fire";
 
         // Initial values for this specific spell
         float area = 1f;
@@ -357,6 +366,8 @@ public class Sunstrike : Spell
     public Sunstrike()
     {
         combo = new List<OrbManager.OrbType> { OrbManager.OrbType.Fire, OrbManager.OrbType.Earth, OrbManager.OrbType.Fire };
+
+        spellName = "Sun Strike";
 
 
         // Initial values for this specific spell
