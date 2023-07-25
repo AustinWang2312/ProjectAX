@@ -71,13 +71,23 @@ public class Pylon : MonoBehaviour
 
 
 
-        if (Input.GetKeyDown(KeyCode.Space) && isHovering && hasOrb)
+        if (Input.GetKeyDown(KeyCode.Space) && isHovering)
         {
+            if(!hasOrb)
+            {
+                SoundManager.instance.PlaySound("Deny Orb");
+                return;
+            }
             if (orbManager.AddOrb(elementalType))
             {
                 nextEnergyGenerationTime = Time.time + energyGenerationInterval;
                 hasOrb = false;
                 UpdatePylonSprite();
+                SoundManager.instance.PlaySound("Absorb Orb");
+            }
+            else
+            {
+                SoundManager.instance.PlaySound("Deny Orb");
             }
             
         }

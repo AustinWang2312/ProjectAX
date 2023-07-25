@@ -14,8 +14,9 @@ public class PlayerController : MonoBehaviour
     private Transform mainCameraTransform;
     private Vector3 cameraOffset;
     public float smoothSpeed = 0.125f;
+    private Coroutine footstepCoroutine;
 
-    
+
 
     private void Start()
     {
@@ -54,11 +55,10 @@ public class PlayerController : MonoBehaviour
 
 
 
-
-
-
-
+        checkFootSteps();
     }
+
+
 
     private void LateUpdate()
     {
@@ -68,13 +68,33 @@ public class PlayerController : MonoBehaviour
         
         transform.up = lookDirection;
 
-        
 
-        
+    }
 
+    private void checkFootSteps()
+    {
+        bool isMoving = Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.D);
 
+        if (isMoving && footstepCoroutine == null)
+        {
+            // Start footstep sound loop
+            footstepCoroutine = StartCoroutine(FootstepSoundLoop());
+        }
+        else if (!isMoving && footstepCoroutine != null)
+        {
+            // Stop footstep sound loop
+            StopCoroutine(footstepCoroutine);
+            footstepCoroutine = null;
+        }
+    }
 
-
+    IEnumerator FootstepSoundLoop()
+    {
+        while (true)
+        {
+            SoundManager.instance.PlayFootStepSound();
+            yield return new WaitForSeconds(0.4f); // Adjust the delay to match the character's walking speed
+        }
     }
 
     public void SpeedUp(float hasteAmount, float duration)

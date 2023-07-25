@@ -7,6 +7,8 @@ public class SoundManager : MonoBehaviour
     public static SoundManager instance;
 
     public AudioSource audioSource; // for sound effects
+    public AudioSource footStepAudioSource; // for sound effects
+
     public AudioSource musicSource; // for music
 
     public List<AudioClip> audioClips; // assign your AudioClips in the Unity editor
@@ -40,8 +42,26 @@ public class SoundManager : MonoBehaviour
         if (soundEffects.ContainsKey(clipName))
         {
             audioSource.clip = soundEffects[clipName];
+
             audioSource.PlayOneShot(audioSource.clip);
-            //AudioSource.PlayClipAtPoint(soundEffects[clipName], Vector3.zero);
+        }
+        else
+        {
+            Debug.Log("No sound found with the name " + clipName);
+        }
+    }
+
+    public void PlayFootStepSound()
+    {
+        string clipName = "Footstep";
+        if (soundEffects.ContainsKey(clipName))
+        {
+            footStepAudioSource.clip = soundEffects[clipName];
+
+            //Introduce Variation of Sound
+            footStepAudioSource.pitch = 1.0f + Random.Range(-0.3f, 0.3f);
+
+            footStepAudioSource.PlayOneShot(footStepAudioSource.clip);
         }
         else
         {

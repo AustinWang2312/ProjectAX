@@ -224,6 +224,7 @@ public class OrbManager : MonoBehaviour
             UpdateOrbHUD();
             currentPossibleSpells = GetPossibleSpells();
             UpdateSpellUI();
+            SoundManager.instance.PlaySound("Swap Orbs");
         }
     }
 
