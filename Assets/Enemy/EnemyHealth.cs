@@ -32,6 +32,7 @@ public class EnemyHealth : MonoBehaviour
         currentHealth -= final_amount;
         ShowDamage(final_amount);
         healthBar.UpdateHealthBar(currentHealth);
+        SoundManager.instance.PlaySound("Enemy Impact");
         if (currentHealth <= 0)
         {
             Die();
