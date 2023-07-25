@@ -120,6 +120,7 @@ public class PlayerHealth : MonoBehaviour
             currentHealth -= totalDamage;
         }
 
+        SoundManager.instance.PlaySound("Player Damage");
         healthBar.UpdateHealthBar();
 
         if (currentHealth <= 0)

@@ -53,6 +53,7 @@ public class EnemyHealth : MonoBehaviour
         currentHealth -= final_amount;
         ShowDamage(final_amount);
         healthBar.UpdateHealthBar(currentHealth);
+        SoundManager.instance.PlaySound("Enemy Burn Damage");
         if (currentHealth <= 0)
         {
             Die();
@@ -124,6 +125,8 @@ public class EnemyHealth : MonoBehaviour
 
     void Die()
     {
+        SoundManager.instance.PlaySound("Enemy Death");
+
         Destroy(gameObject);
     }
 
