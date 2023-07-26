@@ -130,7 +130,7 @@ public class Geyser : Spell
         float area = 1f;
         float objectDuration = 0.01f;
         float knockbackForce = 25f;
-        float hpPercentDmg = 0.1f;
+        float hpPercentDmg = 0.125f;
 
         stats = new SpellStats.Builder()
             .WithArea(area)
@@ -164,8 +164,8 @@ public class Icicle : Spell
         float baseDamage = 25f;
         float projectileSpeed = 15f;
         float baseStun = 3f;
-        float baseBreak = 0.3f;
-        float baseBreakDuration = 10f;
+        float baseBreak = 0.4f;
+        float baseBreakDuration = 20f;
 
         stats = new SpellStats.Builder()
             .WithProjectileSpeed(projectileSpeed)
@@ -267,7 +267,7 @@ public class Boulder : Spell
 
         // Initial values for this specific spell
         float baseHPPercentDamage = 0.25f;
-        float projectileSpeed = 10f;
+        float projectileSpeed = 15f;
         float slowAmount = 0.8f;
         float slowDuration = 3.0f;
         float weakenAmount = 0.5f;
@@ -309,10 +309,10 @@ public class Flamebreath : Spell
         float area = 1f;
         float baseDamage = 25f;
         float slowAmount = 0.9f;
-        float weakenAmount = 0.4f;
+        float weakenAmount = 0.5f;
         float weakenDuration = 4.0f;
         float breakAmount = 0.1f;
-        float breakDuration = 6.0f;
+        float breakDuration = 10.0f;
         float burningDps = 4f;
         float burningDuration = 2.0f;
         float objectDuration = 0.4f;
@@ -356,7 +356,7 @@ public class GreekFire : Spell
         // Initial values for this specific spell
         float area = 1f;
         float breakAmount = 0.1f;
-        float breakDuration = 10.0f;
+        float breakDuration = 15.0f;
         float burningDps = 5f;
         float burningDuration = 10.0f;
         float objectDuration = 0.1f;
@@ -394,7 +394,7 @@ public class Sunstrike : Spell
         // Initial values for this specific spell
         float area = 1f;
         float objectDuration = 0.1f;
-        float flatDamage = 250f;
+        float flatDamage = 300f;
 
         stats = new SpellStats.Builder()
             .WithArea(area)

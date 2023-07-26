@@ -29,6 +29,7 @@ public class EnemyHealth : MonoBehaviour
     public void TakeFlatDamage(float amount)
     {
         float final_amount = amount * (1 - Mathf.Max(0, currentArmor));
+        final_amount = Mathf.Round(final_amount);
         currentHealth -= final_amount;
         ShowDamage(final_amount);
         currentHealth = Mathf.Min(maxHealth, currentHealth);
