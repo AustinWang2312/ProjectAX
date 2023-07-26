@@ -164,7 +164,7 @@ public class Icicle : Spell
         float baseDamage = 25f;
         float projectileSpeed = 15f;
         float baseStun = 3f;
-        float baseBreak = 0.25f;
+        float baseBreak = 0.3f;
         float baseBreakDuration = 10f;
 
         stats = new SpellStats.Builder()
@@ -201,7 +201,7 @@ public class Tarpit : Spell
         float objectDuration = 7f;
         float burningDPS = 5f;
         float burningDuration = 1f;
-        float slowAmount = 0.3f;
+        float slowAmount = 0.5f;
 
         stats = new SpellStats.Builder()
             .WithArea(area)

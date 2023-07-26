@@ -17,7 +17,7 @@ public class EnemyHealth : MonoBehaviour
     public float burnDuration; // The duration of the burn after leaving the zone
     public float totalBurnDPS = 0; // The amount of damage to apply each second
 
-    private float burnTickRate = 0.5f;  // The time between each damage tick
+    private float burnTickRate = 1f;  // The time between each damage tick
     private float burnTickCounter = 0;  // A counter to keep track of time since the last damage tick
 
     private void Start()
@@ -31,8 +31,10 @@ public class EnemyHealth : MonoBehaviour
         float final_amount = amount * (1 - Mathf.Max(0, currentArmor));
         currentHealth -= final_amount;
         ShowDamage(final_amount);
+        currentHealth = Mathf.Min(maxHealth, currentHealth);
+
         healthBar.UpdateHealthBar(currentHealth);
-        SoundManager.instance.PlaySound("Enemy Impact");
+        SoundManager.instance.PlaySound("Enemy Impact", false);
         if (currentHealth <= 0)
         {
             Die();
@@ -53,7 +55,7 @@ public class EnemyHealth : MonoBehaviour
         currentHealth -= final_amount;
         ShowDamage(final_amount);
         healthBar.UpdateHealthBar(currentHealth);
-        SoundManager.instance.PlaySound("Enemy Burn Damage");
+        SoundManager.instance.PlaySound("Enemy Burn Damage", false);
         if (currentHealth <= 0)
         {
             Die();

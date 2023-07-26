@@ -6,7 +6,14 @@ public class SoundManager : MonoBehaviour
 {
     public static SoundManager instance;
 
-    public AudioSource audioSource; // for sound effects
+
+    //audio pool
+    private List<AudioSource> normalPriorityPool = new List<AudioSource>();
+    private List<AudioSource> highPriorityPool = new List<AudioSource>();
+    private int poolSize = 7; // total pool size, adjust this to fit your needs
+    private int highPriorityPoolSize = 20; // adjust this to fit your needs
+
+
     public AudioSource footStepAudioSource; // for sound effects
 
     public AudioSource musicSource; // for music
@@ -34,16 +41,44 @@ public class SoundManager : MonoBehaviour
         {
             soundEffects[clipNames[i]] = audioClips[i];
         }
+
+
+        // Initialize the AudioSource pools
+        for (int i = 0; i < highPriorityPoolSize; i++)
+        {
+            AudioSource newAudioSource = gameObject.AddComponent<AudioSource>();
+            newAudioSource.spatialBlend = 0f; // Make the sound 2D
+
+            if (i < poolSize)
+            {
+                normalPriorityPool.Add(newAudioSource);
+                
+            }
+            else
+            {
+                highPriorityPool.Add(newAudioSource);
+            }
+        }
     }
 
 
-    public void PlaySound(string clipName)
+    public void PlaySound(string clipName, bool highPriority = true)
     {
+        AudioSource freeAudioSource = GetFreeAudioSource(highPriority);
+
+
+        //Abort if no free audio sources
+        if(!freeAudioSource)
+        {
+            Debug.Log("No free AudioSource available");
+            return;
+        }
+
         if (soundEffects.ContainsKey(clipName))
         {
-            audioSource.clip = soundEffects[clipName];
+            freeAudioSource.clip = soundEffects[clipName];
 
-            audioSource.PlayOneShot(audioSource.clip);
+            freeAudioSource.PlayOneShot(freeAudioSource.clip);
         }
         else
         {
@@ -73,5 +108,20 @@ public class SoundManager : MonoBehaviour
     {
         musicSource.clip = clip;
         musicSource.Play();
+    }
+
+    private AudioSource GetFreeAudioSource(bool highPriority)
+    {
+        List<AudioSource> poolToUse = highPriority ? highPriorityPool : normalPriorityPool;
+
+        foreach (AudioSource audioSource in poolToUse)
+        {
+            if (!audioSource.isPlaying)
+            {
+                return audioSource;
+            }
+        }
+
+        return null;
     }
 }
