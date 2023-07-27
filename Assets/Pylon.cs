@@ -36,7 +36,11 @@ public class Pylon : MonoBehaviour
     void Start()
     {
         rend = GetComponent<Renderer>();
-        orbManager = player.GetComponent<OrbManager>();
+        if(player)
+        {
+            orbManager = player.GetComponent<OrbManager>();
+        }
+        
 
         nextEnergyGenerationTime = Time.time + energyGenerationInterval;
 
@@ -51,15 +55,27 @@ public class Pylon : MonoBehaviour
 
     void Update()
     {
-        Vector2 mouseWorldPoint = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        if(!orbManager)
+        {
+            GameObject player = GameObject.FindWithTag("Player");
+            if (player)
+            {
+                this.orbManager = player.GetComponent<OrbManager>();
+            }
 
+            
+        }
+
+
+        Vector2 mouseWorldPoint = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        //Debug.Log(mouseWorldPoint);
         // Cast a ray from camera to mouse position
         RaycastHit2D hit = Physics2D.Raycast(mouseWorldPoint, Vector2.zero, Mathf.Infinity, layerMask);
-
+        //Debug.Log(hit.transform);
         // Check if the ray hits your object
         if (hit.collider == myCollider)
         {
-            Debug.Log("Mouse is over the object");
+            //Debug.Log("Mouse is over the object");
             rend.material.color = Color.red;
             isHovering = true;
         }

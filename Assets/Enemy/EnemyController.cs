@@ -21,7 +21,11 @@ public class EnemyController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        target = GameObject.FindGameObjectWithTag("Player").transform;
+        if(target)
+        {
+            target = GameObject.FindGameObjectWithTag("Player").transform;
+        }
+        
         currentSpeed = defaultSpeed;
         currentDamage = baseDamage;
 
