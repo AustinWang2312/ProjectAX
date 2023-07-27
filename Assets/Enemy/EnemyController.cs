@@ -48,6 +48,10 @@ public class EnemyController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if(!target)
+        {
+            target = GameObject.FindGameObjectWithTag("Player").transform;
+        }
         if (target && !isStunned && !isKnockedBack)
         {
             Vector2 direction = (target.position - transform.position).normalized;

@@ -27,7 +27,11 @@ public class PlayerHealth : MonoBehaviour
         currentHealth = maxHealth;
         currentShield = maxShield;
         currentResistance = defaultResistance;
-        healthBar.UpdateHealthBar();
+        if(healthBar)
+        {
+            healthBar.UpdateHealthBar();
+        }
+        
     }
 
     // Update is called once per frame

@@ -12,15 +12,16 @@ public class PlayerHealthBar : MonoBehaviour
 
     private void Start()
     {
-        healthSlider.maxValue = playerHealth.GetMaxHealth();
-        healthSlider.value = playerHealth.GetCurrentHealth();
-        shieldSlider.maxValue = playerHealth.GetMaxShield();
-        shieldSlider.value = playerHealth.GetCurrentShield();
+        if(healthSlider)
+        {
+            UpdateHealthBar();
+        }
 
     }
 
     public void UpdateHealthBar()
     {
+        healthSlider.maxValue = playerHealth.GetMaxHealth();
         healthSlider.value = playerHealth.GetCurrentHealth();
         shieldSlider.maxValue = playerHealth.GetMaxShield();
         shieldSlider.value = playerHealth.GetCurrentShield();
