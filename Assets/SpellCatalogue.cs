@@ -19,20 +19,50 @@ public class SpellCatalogue : MonoBehaviour
         new Sunstrike()
     };
 
-    public TextMeshProUGUI [] descriptions;
- 
+    public Sprite fireOrb;
+    public Sprite waterOrb;
+    public Sprite earthOrb;
+
+    public List<SpellStatObjectUI> spellStatObjects;
+    //Make sure SpellStatObjects is same length as allSpells by assigning in editor
+
+
+    private Sprite getOrbImage (OrbManager.OrbType type)
+    {
+        switch (type)
+        {
+            case OrbManager.OrbType.Earth:
+                return earthOrb;
+
+            case OrbManager.OrbType.Fire:
+                return fireOrb;
+
+            case OrbManager.OrbType.Water:
+                return waterOrb;
+
+            default:
+                return waterOrb;
+        }
+    }
+
     // Start is called before the first frame update
     void Start()
     {
-        Flamebreath test = new Flamebreath();
-        string teststr = test.GenerateDescription();
+        for (int i = 0; i < allSpells.Count; i++)
+        {
+            SpellStatObjectUI spellStatObject = spellStatObjects[i];
+            Spell spell = allSpells[i];
 
-        descriptions[0].SetText(teststr);
+            spellStatObject.spellName.text = spell.getName();
+            spellStatObject.spellDesc.text = spell.GenerateDescription();
+            List<OrbManager.OrbType> orbList= spell.GetComboString();
+            spellStatObject.orb1.sprite = getOrbImage(orbList[0]);
+            spellStatObject.orb2.sprite = getOrbImage(orbList[1]);
+            spellStatObject.orb3.sprite = getOrbImage(orbList[2]);
+
+        }
+
+
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 }

@@ -17,4 +17,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Death Scene.unity
     guid: 2b5c6a64da28b47ceaa0ae17ea0a37db
+  - enabled: 1
+    path: Assets/Scenes/Spell Catalogue Scene.unity
+    guid: 16f43f80afcfa422abc84f390c41b29d
   m_configObjects: {}

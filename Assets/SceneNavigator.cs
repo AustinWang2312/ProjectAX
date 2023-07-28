@@ -31,6 +31,15 @@ public class SceneNavigator : MonoBehaviour
         SceneManager.LoadScene("Death Scene");
     }
 
+    public void LoadSpellCatalogueScene()
+    {
+        SoundManager.instance.PlaySound("UI Button");
+        SceneManager.LoadScene("Spell Catalogue Scene");
+    }
+
+
+
+
     public void QuitGame()
     {
         SoundManager.instance.PlaySound("UI Button");
