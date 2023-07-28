@@ -155,6 +155,8 @@ public class PlayerHealth : MonoBehaviour
     // Function to handle player's death
     private void Die()
     {
+        SceneNavigator deathLoader = GameObject.Find("Death Scene Loader").GetComponent<SceneNavigator>();
+        deathLoader.LoadDeathScene();
         // Perform actions when the player dies
     }
 

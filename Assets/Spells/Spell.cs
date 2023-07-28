@@ -27,6 +27,11 @@ public abstract class Spell
         return spellName;
     }
 
+    public string GenerateDescription()
+    {
+        return this.stats.GenerateDescription();
+    }
+
     public void playSFX()
     {
         SoundManager.instance.PlaySound(spellName);
@@ -43,19 +48,22 @@ public abstract class Spell
 
     public void ApplySpellStatsToGameObject(SpellStats spellStats, GameObject gameObject, OrbManager player)
     {
+        PlayerStats playerStats = player.playerStats;
+        SpellStats finalStats = spellStats.ApplyPlayerStats(playerStats);
+
 
         //Set Velocity
         Rigidbody2D rb = gameObject.GetComponent<Rigidbody2D>();
         Projectile projectile = gameObject.GetComponent<Projectile>();
         if (rb != null && projectile != null)
         {
-            rb.velocity = player.firePoint.up * spellStats.ProjectileSpeed;
+            rb.velocity = player.firePoint.up * finalStats.ProjectileSpeed;
         }
 
         //adjust area
-        if(spellStats.Area != 0)
+        if(finalStats.Area != 0)
         {
-            Vector2 scaledUp = new Vector2(gameObject.transform.localScale.x * spellStats.Area, gameObject.transform.localScale.y * spellStats.Area);
+            Vector2 scaledUp = new Vector2(gameObject.transform.localScale.x * finalStats.Area, gameObject.transform.localScale.y * finalStats.Area);
             gameObject.transform.localScale = scaledUp;
         }
         
@@ -64,9 +72,12 @@ public abstract class Spell
         var spellComponents = gameObject.GetComponents<ISpellComponent>();
         foreach (var component in spellComponents)
         {
-            component.ApplyStats(spellStats);
+            component.ApplyStats(finalStats);
         }
     }
+
+
+    
 }
 
 public class BaseSpell: Spell
@@ -74,11 +85,9 @@ public class BaseSpell: Spell
     //For DelegatedSpawner
     public override void Cast(OrbManager player)
     {
-        PlayerStats playerStats = player.playerStats;
         GameObject shield = (GameObject)GameObject.Instantiate(Resources.Load<GameObject>("EarthShield"), player.transform.position, Quaternion.identity);
-        SpellStats finalStats = stats.ApplyPlayerStats(playerStats);
 
-        ApplySpellStatsToGameObject(finalStats, shield, player);
+        ApplySpellStatsToGameObject(stats, shield, player);
     }
 
 
@@ -107,11 +116,9 @@ public class EarthShield : Spell
 
     public override void Cast(OrbManager player)
     {
-        PlayerStats playerStats = player.playerStats;
         GameObject shield = (GameObject)GameObject.Instantiate(Resources.Load<GameObject>("EarthShield"), player.transform.position, Quaternion.identity);
-        SpellStats finalStats = stats.ApplyPlayerStats(playerStats);
 
-        ApplySpellStatsToGameObject(finalStats, shield, player);
+        ApplySpellStatsToGameObject(stats, shield, player);
         playSFX();
     }
 
@@ -142,11 +149,9 @@ public class Geyser : Spell
 
     public override void Cast(OrbManager player)
     {
-        PlayerStats playerStats = player.playerStats;
         GameObject geyser = (GameObject)GameObject.Instantiate(Resources.Load<GameObject>("Geyser"), player.cursorPoint.position, Quaternion.identity);
-        SpellStats finalStats = stats.ApplyPlayerStats(playerStats);
 
-        ApplySpellStatsToGameObject(finalStats, geyser, player);
+        ApplySpellStatsToGameObject(stats, geyser, player);
         playSFX();
     }
 
@@ -178,11 +183,9 @@ public class Icicle : Spell
 
     public override void Cast(OrbManager player)
     {
-        PlayerStats playerStats = player.playerStats;
         GameObject icicle = (GameObject)GameObject.Instantiate(Resources.Load<GameObject>("Icicle"), player.firePoint.position, player.transform.rotation);
-        SpellStats finalStats = stats.ApplyPlayerStats(playerStats);
 
-        ApplySpellStatsToGameObject(finalStats, icicle, player);
+        ApplySpellStatsToGameObject(stats, icicle, player);
         playSFX();
     }
 
@@ -214,11 +217,9 @@ public class Tarpit : Spell
 
     public override void Cast(OrbManager player)
     {
-        PlayerStats playerStats = player.playerStats;
         GameObject tarpit = (GameObject)GameObject.Instantiate(Resources.Load<GameObject>("Tarpit"), player.cursorPoint.position, Quaternion.identity);
-        SpellStats finalStats = stats.ApplyPlayerStats(playerStats);
 
-        ApplySpellStatsToGameObject(finalStats, tarpit, player);
+        ApplySpellStatsToGameObject(stats, tarpit, player);
         playSFX();
     }
 
@@ -247,11 +248,9 @@ public class Fireball : Spell
 
     public override void Cast(OrbManager player)
     {
-        PlayerStats playerStats = player.playerStats;
         GameObject fireball = (GameObject)GameObject.Instantiate(Resources.Load<GameObject>("Fireball"), player.firePoint.position, Quaternion.identity);
-        SpellStats finalStats = stats.ApplyPlayerStats(playerStats);
 
-        ApplySpellStatsToGameObject(finalStats, fireball, player);
+        ApplySpellStatsToGameObject(stats, fireball, player);
         playSFX();
     }
 
@@ -287,11 +286,9 @@ public class Boulder : Spell
 
     public override void Cast(OrbManager player)
     {
-        PlayerStats playerStats = player.playerStats;
         GameObject boulder = (GameObject)GameObject.Instantiate(Resources.Load<GameObject>("Boulder"), player.firePoint.position, Quaternion.identity);
-        SpellStats finalStats = stats.ApplyPlayerStats(playerStats);
 
-        ApplySpellStatsToGameObject(finalStats, boulder, player);
+        ApplySpellStatsToGameObject(stats, boulder, player);
         playSFX();
     }
 
@@ -333,13 +330,11 @@ public class Flamebreath : Spell
 
     public override void Cast(OrbManager player)
     {
-        PlayerStats playerStats = player.playerStats;
         Vector2 offset = player.firePoint.up * 1;
         Vector3 newPosition = player.firePoint.position + new Vector3(offset.x, offset.y, 0);
         GameObject flameBreath = (GameObject)GameObject.Instantiate(Resources.Load<GameObject>("FlameBreath"), newPosition, player.transform.rotation);
-        SpellStats finalStats = stats.ApplyPlayerStats(playerStats);
 
-        ApplySpellStatsToGameObject(finalStats, flameBreath, player);
+        ApplySpellStatsToGameObject(stats, flameBreath, player);
         playSFX();
     }
 
@@ -373,11 +368,10 @@ public class GreekFire : Spell
 
     public override void Cast(OrbManager player)
     {
-        PlayerStats playerStats = player.playerStats;
         Vector3 spellLocation = player.cursorPoint.position;
         GameObject indicator = (GameObject)GameObject.Instantiate(Resources.Load<GameObject>("greekFireIndicator"), spellLocation, Quaternion.identity);
 
-        DelegatedSpawner.Instance.WaitAndTrigger("GreekFire", 1f, indicator, playerStats, player, spellLocation, stats, spellName);
+        DelegatedSpawner.Instance.WaitAndTrigger("GreekFire", 1f, indicator, player, stats, spellName);
         playSFX("Greek Fire Indicator");
     }
 }
@@ -405,11 +399,10 @@ public class Sunstrike : Spell
 
     public override void Cast(OrbManager player)
     {
-        PlayerStats playerStats = player.playerStats;
         Vector3 spellLocation = player.cursorPoint.position;
         GameObject indicator = (GameObject)GameObject.Instantiate(Resources.Load<GameObject>("sunstrikeIndicator"), spellLocation, Quaternion.identity);
         playSFX("Sun Strike Indicator");
-        DelegatedSpawner.Instance.WaitAndTrigger("Sunstrike", 2f, indicator, playerStats, player, spellLocation, stats, spellName);
+        DelegatedSpawner.Instance.WaitAndTrigger("Sunstrike", 2f, indicator, player, stats, spellName);
 
     }
 
@@ -446,20 +439,21 @@ public class DelegatedSpawner: MonoBehaviour
         }
     }
 
-    public void WaitAndTrigger(string spellName, float duration, GameObject indicator, PlayerStats playerStats, OrbManager player, Vector3 spellLocation, SpellStats spellStats, string spellSFXName)
+    public void WaitAndTrigger(string spellName, float duration, GameObject indicator, OrbManager player, SpellStats spellStats, string spellSFXName)
     {
-        StartCoroutine(WaitFor(spellName, duration, indicator, playerStats, player, spellLocation, spellStats, spellSFXName));
+        StartCoroutine(WaitFor(spellName, duration, indicator, player, spellStats, spellSFXName));
     }
 
-    private IEnumerator WaitFor(string spellName, float duration, GameObject indicator, PlayerStats playerStats, OrbManager player, Vector3 spellLocation, SpellStats spellStats, string spellSFXName)
+    private IEnumerator WaitFor(string spellName, float duration, GameObject indicator,  OrbManager player, SpellStats spellStats, string spellSFXName)
     {
+        Vector3 spellLocation = indicator.transform.position;
         yield return new WaitForSeconds(duration);
         Destroy(indicator);
+
         GameObject spell = (GameObject)GameObject.Instantiate(Resources.Load<GameObject>(spellName), spellLocation, Quaternion.identity);
-        SpellStats finalStats = spellStats.ApplyPlayerStats(playerStats);
 
         Spell baseSpell = new BaseSpell();
-        baseSpell.ApplySpellStatsToGameObject(finalStats, spell, player);
+        baseSpell.ApplySpellStatsToGameObject(spellStats, spell, player);
         baseSpell.playSFX(spellSFXName);
 
 

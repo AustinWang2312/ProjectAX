@@ -3,22 +3,39 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class MainMenu : MonoBehaviour
+public class SceneNavigator : MonoBehaviour
 {
     public void LoadTutorialScene()
     {
-        // Replace "TutorialScene" with the name of your tutorial scene
+        SoundManager.instance.PlaySound("UI Button");
         SceneManager.LoadScene("Tutorial Scene");
+        
     }
 
     public void LoadFreePlayModeScene()
     {
-        // Replace "FreePlayScene" with the name of your free play mode scene
+        SoundManager.instance.PlaySound("UI Button");
         SceneManager.LoadScene("Freeplay Scene");
+        
+    }
+
+    public void LoadMenuScene()
+    {
+        SoundManager.instance.PlaySound("UI Button");
+        SceneManager.LoadScene("Menu Scene");
+    }
+
+    public void LoadDeathScene()
+    {
+        SoundManager.instance.PlaySound("UI Button");
+        SceneManager.LoadScene("Death Scene");
     }
 
     public void QuitGame()
     {
+        SoundManager.instance.PlaySound("UI Button");
         Application.Quit();
     }
+
+    
 }

@@ -11,7 +11,7 @@ public class SoundManager : MonoBehaviour
     private List<AudioSource> normalPriorityPool = new List<AudioSource>();
     private List<AudioSource> highPriorityPool = new List<AudioSource>();
     private int poolSize = 7; // total pool size, adjust this to fit your needs
-    private int highPriorityPoolSize = 20; // adjust this to fit your needs
+    private int highPriorityPoolSize = 25; // adjust this to fit your needs
 
 
     public AudioSource footStepAudioSource; // for sound effects

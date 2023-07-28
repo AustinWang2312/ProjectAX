@@ -1,9 +1,36 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Text;
 
 public class SpellStats
 {
+    private static readonly Dictionary<string, string> PropertyDescriptions = new Dictionary<string, string>
+{
+    { "Area", "- AOE" },
+    { "ProjectileSpeed", "- Projectile speed: {0}" },
+    { "HpPercentDmg", "- Damage: {0}% of enemy health" },
+    { "FlatDmg", "- Damage: {0} HP" },
+    { "ObjectDuration", "- Lasts: {0} seconds" },
+    { "WeakenAmount", "- Weaken Amount {0}%" },
+    { "WeakenDuration", "- Weaken Duration: {0} seconds" },
+    { "BurningDPS", "- Burn Damage: {0} HP per second" },
+    { "BurningDuration", "- Burn Duration: {0} seconds" },
+    { "BreakArmorAmount", "- Armor Break Amount: {0}%" },
+    { "BreakDuration", "- Armor Break Duration: {0} seconds" },
+    { "KnockbackForce", "- Knockback Force: {0}" },
+    { "Healing", "- Heals: {0} HP" },
+    { "HasteAmount", "- Haste Amount: {0}%" },
+    { "HasteDuration", "- Haste Duration: {0} seconds" },
+    { "ShieldAmount", "- Shield Amount: {0} HP" },
+    { "ResistanceAmount", "- Resistance Increase: {0}" },
+    { "ResistanceDuration", "- Resistance Duration: {0} seconds" },
+    { "SlowAmount", "- Slow Amount: {0}%" },
+    { "SlowDuration", "- Slow Duration: {0} seconds" },
+    { "StunDuration", "- Stun Duration: {0} seconds" },
+};
+
+
     public float Area { get; set; }
     public float ProjectileSpeed { get; set; }
     public float HpPercentDmg { get; set; }
@@ -204,6 +231,33 @@ public class SpellStats
 
         return copy;
     }
+
+    public string GenerateDescription()
+    {
+        StringBuilder description = new StringBuilder();
+        foreach (var property in typeof(SpellStats).GetProperties())
+        {
+            string propertyName = property.Name;
+            float value = (float)property.GetValue(this);
+
+            if (propertyName != "ObjectDuration" && value < 1.0f)
+            {
+                value *= 100;  // Convert the decimal to a percentage for display
+            }
+
+            if (value != 0 && PropertyDescriptions.ContainsKey(propertyName))
+            {
+                string propertyDescription = PropertyDescriptions[propertyName];
+                description.AppendLine(string.Format(propertyDescription, value));
+            }
+        }
+        Debug.Log(description.ToString());
+        return description.ToString();
+    }
+
+
+
+
 
 
 }

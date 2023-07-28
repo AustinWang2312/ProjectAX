@@ -38,6 +38,7 @@ public class ButtonManager : MonoBehaviour
     {
         // Replace "MainMenuScene" with the name of your main menu scene
         Debug.Log("Button Pressed");
+        SoundManager.instance.PlaySound("UI Button");
         SceneManager.LoadScene("Menu Scene");
     }
 }
