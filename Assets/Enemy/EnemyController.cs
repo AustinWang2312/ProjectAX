@@ -17,13 +17,22 @@ public class EnemyController : MonoBehaviour
     public float baseDamage = 10f;
     public float currentDamage = 10f;
 
+    private bool isCollidingWithPlayer = false;
+    private PlayerHealth player;
+
+
 
     // Start is called before the first frame update
     void Start()
     {
-        if(target)
+        if(!target)
         {
             target = GameObject.FindGameObjectWithTag("Player").transform;
+        }
+
+        if(!player)
+        {
+            player = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerHealth>();
         }
         
         currentSpeed = defaultSpeed;
@@ -31,23 +40,36 @@ public class EnemyController : MonoBehaviour
 
     }
 
-    
-
-    private void OnCollisionStay2D(Collision2D collision)
+    private void OnCollisionEnter2D(Collision2D collision)
     {
-        // Check if we are colliding with the player
         if (collision.gameObject.CompareTag("Player"))
         {
-            // Get the player controller
-            PlayerHealth playerHealth = collision.gameObject.GetComponent<PlayerHealth>();
-
-            // Deal damage to the player
-            if (playerHealth != null)
+            if (!isCollidingWithPlayer) // to prevent starting the coroutine multiple times
             {
-                playerHealth.TakeFlatDamage(currentDamage * Time.deltaTime);
+                StartCoroutine(DamagePlayerOverTime());
             }
         }
     }
+
+    private void OnCollisionExit2D(Collision2D collision)
+    {
+        if (collision.gameObject.CompareTag("Player"))
+        {
+            isCollidingWithPlayer = false; // this will stop the coroutine at the next while loop check
+        }
+    }
+
+    private IEnumerator DamagePlayerOverTime()
+    {
+        isCollidingWithPlayer = true;
+
+        while (isCollidingWithPlayer)
+        {
+            player.TakeFlatDamage(currentDamage * Time.deltaTime);
+            yield return null; // waits one frame, could also wait a certain amount of time for slower damage
+        }
+    }
+
 
     // Update is called once per frame
     void Update()
@@ -56,6 +78,11 @@ public class EnemyController : MonoBehaviour
         {
             target = GameObject.FindGameObjectWithTag("Player").transform;
         }
+
+        if (!player)
+        {
+            player = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerHealth>();
+        }
         if (target && !isStunned && !isKnockedBack)
         {
             Vector2 direction = (target.position - transform.position).normalized;
@@ -63,15 +90,17 @@ public class EnemyController : MonoBehaviour
             rb.rotation = angle;
             moveDirection = direction;            
         }
-    }
 
-    private void FixedUpdate()
-    {
-        if (target && !isKnockedBack &&!isStunned)
+        if (target && !isKnockedBack && !isStunned)
         {
             rb.velocity = new Vector2(moveDirection.x, moveDirection.y) * currentSpeed;
         }
     }
+
+    //private void FixedUpdate()
+    //{
+        
+    //}
 
     public void ApplyKnockback(Vector2 circleCenter, float knockbackForce)
     {

@@ -17,9 +17,6 @@ public class Pylon : MonoBehaviour
     public Sprite orbOnSprite; // Sprite to display when the pylon has an orb
     public Sprite orbOffSprite; // Sprite to display when the pylon does not have an orb
 
-    private LayerMask layerMask;
-
-    private Collider2D myCollider;
     public void SetPlayerObject(GameObject p)
     {
         player = p;
@@ -47,10 +44,27 @@ public class Pylon : MonoBehaviour
         // Get the SpriteRenderer component attached to the pylon
         spriteRenderer.sprite = orbOffSprite;
 
-        myCollider = GetComponent<Collider2D>();
-        layerMask = LayerMask.GetMask("PylonLayer");
+
      }
-    
+
+    void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.gameObject.CompareTag("Cursor"))
+        {
+            rend.material.color = Color.red;
+            isHovering = true;
+        }
+    }
+
+    void OnTriggerExit2D(Collider2D other)
+    {
+        if (other.gameObject.CompareTag("Cursor"))
+        {
+            rend.material.color = Color.white;
+            isHovering = false;
+        }
+    }
+
 
 
     void Update()
@@ -67,23 +81,7 @@ public class Pylon : MonoBehaviour
         }
 
 
-        Vector2 mouseWorldPoint = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        //Debug.Log(mouseWorldPoint);
-        // Cast a ray from camera to mouse position
-        RaycastHit2D hit = Physics2D.Raycast(mouseWorldPoint, Vector2.zero, Mathf.Infinity, layerMask);
-        //Debug.Log(hit.transform);
-        // Check if the ray hits your object
-        if (hit.collider == myCollider)
-        {
-            //Debug.Log("Mouse is over the object");
-            rend.material.color = Color.red;
-            isHovering = true;
-        }
-        else
-        {
-            rend.material.color = Color.white;
-            isHovering = false;
-        }
+  
 
 
 
